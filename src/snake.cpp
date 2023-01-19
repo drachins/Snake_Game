@@ -2,15 +2,21 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update() {
+void Snake::Update(Obstacle const &obstacle) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
-      static_cast<int>(
-          head_y)};  // We first capture the head's cell before updating.
+      static_cast<int>(head_y)};  // We first capture the head's cell before updating.
+
   UpdateHead();
   SDL_Point current_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
+
+  // Check if snake is still alive
+  int obs_coords[2] = {obstacle.GetObstacleXCoord(), obstacle.GetObstacleYCoord()};
+  if(current_cell.x == obs_coords[0] && current_cell.y == obs_coords[1]){
+    alive = false;
+  }
 
   // Update all of the body vector items if the snake head has moved to a new
   // cell.
@@ -41,6 +47,7 @@ void Snake::UpdateHead() {
   // Wrap the Snake around to the beginning if going off of the screen.
   head_x = fmod(head_x + grid_width, grid_width);
   head_y = fmod(head_y + grid_height, grid_height);
+
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
@@ -54,10 +61,11 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     growing = false;
     size++;
   }
+ 
 
   // Check if the snake has died.
   for (auto const &item : body) {
-    if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+    if ((current_head_cell.x == item.x && current_head_cell.y == item.y)) {
       alive = false;
     }
   }

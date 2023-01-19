@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "SDL.h"
+#include "obstacle.h"
 
 class Snake {
  public:
@@ -14,7 +15,7 @@ class Snake {
         head_x(grid_width / 2),
         head_y(grid_height / 2) {}
 
-  void Update();
+  void Update(Obstacle const &obstacle);
 
   void GrowBody();
   bool SnakeCell(int x, int y);
