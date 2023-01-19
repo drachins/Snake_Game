@@ -1,5 +1,5 @@
-#ifndef OBSTCLE_H
-#define OSTACLE_H
+#ifndef OBSTACLE_H
+#define OBSTACLE_H
 
 #include "SDL.h"
 
@@ -11,11 +11,11 @@ class Obstacle{
     public:
         // Setters/Getters
         void SetObstacleCoords(int x, int y);
-        int GetObstacleXCoord(){return obs.x};
-        int GetObstacleYCoord(){return obs.y};
+        int GetObstacleXCoord(){return obs.x;}
+        int GetObstacleYCoord(){return obs.y;}
         
 
-}
+};
 
 
-#endif OBSTACLE_H
+#endif 
