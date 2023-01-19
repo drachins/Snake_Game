@@ -10,6 +10,7 @@ Renderer::Renderer(const std::size_t screen_width,
       grid_width(grid_width),
       grid_height(grid_height) {
   // Initialize SDL
+  
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
@@ -38,7 +39,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Obstacle const &obstacle) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -60,6 +61,11 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
     block.y = point.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
+  // Render obstacle.
+  SDL_SetRenderDrawColor(sdl_renderer, 0x7A, 0xF9, 0X4F, 0xFF);
+  block.x = obstacle.GetObstacleXCoord() * block.w;
+  block.y = obstacle.GetObstacleYCoord() * block.h;
+  SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's head
   block.x = static_cast<int>(snake.head_x) * block.w;

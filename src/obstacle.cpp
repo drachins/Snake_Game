@@ -1,5 +1,7 @@
 
+#include<iostream>
 #include "obstacle.h"
+
 
 void Obstacle::SetObstacleCoords(int x, int y){
 

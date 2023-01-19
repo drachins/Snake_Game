@@ -5,14 +5,17 @@
 
 class Obstacle{
 
-    private:
-        SDL_Point obs;
-    
     public:
         // Setters/Getters
         void SetObstacleCoords(int x, int y);
-        int GetObstacleXCoord(){return obs.x;}
-        int GetObstacleYCoord(){return obs.y;}
+        int GetObstacleXCoord() const {return obs.x;}
+        int GetObstacleYCoord() const {return obs.y;}
+
+
+    private:
+        SDL_Point obs;
+    
+    
         
 
 };
