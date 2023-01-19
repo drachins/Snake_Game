@@ -2,10 +2,12 @@
 #define GAME_H
 
 #include <random>
+#include <memory>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "obstacle.h"
 
 class Game {
  public:
@@ -14,6 +16,7 @@ class Game {
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
+  std::unique_ptr<Obstacle> _obstacle;
 
  private:
   Snake snake;
@@ -28,6 +31,7 @@ class Game {
 
   void PlaceFood();
   void Update();
+  void PlaceObstacle();
 };
 
 #endif
