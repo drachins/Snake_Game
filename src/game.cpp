@@ -74,21 +74,19 @@ void Game::PlaceFood() {
   else{
     int x, y;
     SDL_Point fd;
-    bool cleared = false;
-    while(!cleared){
+    while(true){
       x = random_w(engine);
       y = random_h(engine);
-      for(auto itr : _obstacles){
-        if(x != itr->GetObstacleXCoord() && y != itr->GetObstacleYCoord() && !snake.SnakeCell(x,y) && _food.size() < nFood){
-          fd.x = x;
-          fd.y = y;
-          _food.push_back(fd);
-          cleared = true;
-          }
-        }
+      bool match = false;
+      std:for_each(_obstacles.begin(), _obstacles.end(), [match, x, y](std::shared_ptr<Obstacle> &itr) mutable {if(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y){match = true;}});
+      if(!match && !snake.SnakeCell(x,y)){
+        fd.x = x;
+        fd.y = y;
+        _food.push_back(fd);
+        break;
       }
-
     }
+  }
 }
 
 
@@ -97,22 +95,20 @@ void Game::PlaceObstacle() {
   for(int i = 0; i < nObstacles; i++){
     Obstacle obstacle;
     int x, y;
-    bool cleared = false;
-    while(!cleared){
+    while(true){
       x = random_w(engine);
       y = random_h(engine);
-
-      for(auto fdr : _food){
-        if(x != fdr.x && y != fdr.y && !snake.SnakeCell(x,y)){
-          obstacle.SetObstacleCoords(x,y);
-          _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
-          cleared = true;
-        }
+      bool match = false;
+      std::for_each(_food.cbegin(), _food.cend(), [match, x, y](SDL_Point itr) mutable {if(itr.x == x && itr.y == y){match = true;}});
+      if(!match && !snake.SnakeCell(x,y)){
+        obstacle.SetObstacleCoords(x,y);
+        _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
+        break;
+      }
       }
 
     }  
   }
-}
 
 
 void Game::Update() {
