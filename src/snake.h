@@ -2,6 +2,7 @@
 #define SNAKE_H
 
 #include <vector>
+#include <memory>
 #include "SDL.h"
 #include "obstacle.h"
 
@@ -15,7 +16,7 @@ class Snake {
         head_x(grid_width / 2),
         head_y(grid_height / 2) {}
 
-  void Update(Obstacle const &obstacle);
+  void Update(std::vector<std::shared_ptr<Obstacle>> const obstacles);
 
   void GrowBody();
   bool SnakeCell(int x, int y);
