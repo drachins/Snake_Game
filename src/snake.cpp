@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update(Obstacle const &obstacle) {
+void Snake::Update(std::vector<std::shared_ptr<Obstacle>> const obstacles) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // We first capture the head's cell before updating.
@@ -13,9 +13,11 @@ void Snake::Update(Obstacle const &obstacle) {
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
 
   // Check if snake is still alive
-  int obs_coords[2] = {obstacle.GetObstacleXCoord(), obstacle.GetObstacleYCoord()};
-  if(current_cell.x == obs_coords[0] && current_cell.y == obs_coords[1]){
-    alive = false;
+  for(auto itr : obstacles){
+    if(itr->GetObstacleXCoord() == current_cell.x && itr->GetObstacleYCoord() == current_cell.y){
+      alive = false;
+      break;
+    }
   }
 
   // Update all of the body vector items if the snake head has moved to a new
