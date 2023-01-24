@@ -1,8 +1,9 @@
-#include "game.h"
+
 #include <iostream>
 #include <iterator>
 #include <algorithm>
 #include "SDL.h"
+#include "game.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
@@ -77,9 +78,7 @@ void Game::PlaceFood() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      bool match = false;
-      std:for_each(_obstacles.begin(), _obstacles.end(), [match, x, y](std::shared_ptr<Obstacle> &itr) mutable {if(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y){match = true;}});
-      if(!match && !snake.SnakeCell(x,y)){
+      if((std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);})) && !snake.SnakeCell(x,y)){
         fd.x = x;
         fd.y = y;
         _food.push_back(fd);
@@ -98,17 +97,14 @@ void Game::PlaceObstacle() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      bool match = false;
-      std::for_each(_food.cbegin(), _food.cend(), [match, x, y](SDL_Point itr) mutable {if(itr.x == x && itr.y == y){match = true;}});
-      if(!match && !snake.SnakeCell(x,y)){
+      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && !snake.SnakeCell(x,y)){
         obstacle.SetObstacleCoords(x,y);
         _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
         break;
       }
-      }
-
-    }  
-  }
+    }
+  }  
+}
 
 
 void Game::Update() {
@@ -123,6 +119,7 @@ void Game::Update() {
   // Check if snake head 
 
   // Check if there's food over here
+
   for(int i = 0; i < nFood; i++){
     if(_food[i].x == new_x && _food[i].y == new_y){
       score++;
