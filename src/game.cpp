@@ -28,9 +28,7 @@ void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-
   for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
-
 
   while (running) {
     frame_start = SDL_GetTicks();
@@ -113,8 +111,10 @@ void Game::PlaceObstacle() {
         break;
       }
     }
-    std::for_each(_snakes.begin(), _snakes.end(), [_obstacles](std::shared_ptr<Snake> &itr){itr->GetObstacles(_obstacles);});
-  }  
+  }
+  for(auto itr : _snakes){
+    itr->GetObstacles(_obstacles);
+    }  
 }
 
 
@@ -126,11 +126,24 @@ void Game::Update() {
   //int new_x = static_cast<int>(snake.head_x);
   //int new_y = static_cast<int>(snake.head_y);
 
+  for(int i; i < nPlayers; i++){
+    int x_head = static_cast<int>(_snakes[i]->head_x);
+    int y_head = static_cast<int>(_snakes[i]->head_y);
+    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return !(itr.x == x_head && itr.y == y_head)})){
+      score++;
+      _food.erase(_food.begin() + i);
+      _snakes[i]->GrowBody();
+      _snakes[i]->speed += 0.02;
+    }
+  }
+  PlaceFood();
+
   // Check if snake head 
 
   // Check if there's food over here
 
 
+ 
   /*for(int i = 0; i < nFood; i++){
     if(_food[i].x == new_x && _food[i].y == new_y){
       score++;

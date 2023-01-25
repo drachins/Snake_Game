@@ -74,7 +74,7 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
 }
 
 void Snake::GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles){
-  _obstacles = obstacles;
+  _obstacles = obstacles 
 }
 
 void Snake::GrowBody() { growing = true; }

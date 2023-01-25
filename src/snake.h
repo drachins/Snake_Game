@@ -23,8 +23,8 @@ class Snake {
 
   void GrowBody();
   bool SnakeCell(int x, int y);
-  void GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles);
-  void CheckObstacle(std::vector<std::shared_ptr<Obstacle>> obstacles, SDL_Point curr_cell);
+  void GetObstacles(Obstacle obstacles);
+  void CheckObstacle(SDL_Point curr_cell);
 
   Direction direction = Direction::kUp;
 
@@ -44,7 +44,7 @@ class Snake {
   int grid_width;
   int grid_height;
   std::vector<std::thread> threads;
-  std::vector<std::shared_ptr<Obstacle>> _obstacles;
+  std::vector<Obstacle> _obstacles;
 };
 
 #endif

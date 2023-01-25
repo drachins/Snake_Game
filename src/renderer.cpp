@@ -39,7 +39,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, std::vector<SDL_Point> const food, std::vector<std::shared_ptr<Obstacle>> const obstacles) {
+void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vector<SDL_Point> const food, std::vector<std::shared_ptr<Obstacle>> const obstacles) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -57,11 +57,14 @@ void Renderer::Render(Snake const snake, std::vector<SDL_Point> const food, std:
   }
 
   // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (SDL_Point const &point : snake.body) {
-    block.x = point.x * block.w;
-    block.y = point.y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
+
+  for(auto snk : snakes){
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    for (SDL_Point const &point : snk->body) {
+      block.x = point.x * block.w;
+      block.y = point.y * block.h;
+      SDL_RenderFillRect(sdl_renderer, &block);
+  }
   }
   // Render obstacles
   for(auto itr : obstacles){
