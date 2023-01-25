@@ -15,16 +15,20 @@ class Snake {
       : grid_width(grid_width),
         grid_height(grid_height),
         playerN(_playerN),
-        head_x(grid_width / 2),
-        head_y(grid_height / 2) {}
+        head_x(grid_height/(_playerN + 1)),
+        head_y(grid_width/(_playerN + 1)) {}
+  
+        
 
   void launch();
+  void run();
   void Update();
 
   void GrowBody();
   bool SnakeCell(int x, int y);
   void GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles);
   void CheckObstacle(SDL_Point curr_cell);
+
 
   Direction direction = Direction::kUp;
 

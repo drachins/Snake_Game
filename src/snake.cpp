@@ -4,8 +4,16 @@
 #include <iostream>
 #include <algorithm>
 
+
 void Snake::launch(){
-  threads.emplace_back(std::thread(&Snake::Update, this));
+  threads.emplace_back(&Snake::run, this);
+}
+
+void Snake::run(){
+  while(alive){
+    Update();
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
+  }
 }
 
 void Snake::Update() {

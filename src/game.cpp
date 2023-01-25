@@ -29,7 +29,7 @@ void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
   bool running = true;
 
   for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
-
+  
   while (running) {
     frame_start = SDL_GetTicks();
 
@@ -121,24 +121,18 @@ void Game::PlaceObstacle() {
 void Game::Update() {
 
   
-  for(auto snk : _snakes){
-    if(!snk->alive){
-      return;
-    }
-  }
-
-
-  for(int i; i < nPlayers; i++){
+  for(int i = 0; i < nPlayers; i++){
     int x_head = static_cast<int>(_snakes[i]->head_x);
     int y_head = static_cast<int>(_snakes[i]->head_y);
-    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return !(itr.x == x_head && itr.y == y_head);})){
+    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return (itr.x == x_head && itr.y == y_head);})){
       score[i]++;
       _food.erase(_food.begin() + i);
       _snakes[i]->GrowBody();
       _snakes[i]->speed += 0.02;
+      PlaceFood();
     }
   }
-  PlaceFood();
+  
 
 }
 
