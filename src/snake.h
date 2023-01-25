@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <thread>
 #include "SDL.h"
 #include "obstacle.h"
 
@@ -10,16 +11,20 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height)
+  Snake(int grid_width, int grid_height, int _playerN)
       : grid_width(grid_width),
         grid_height(grid_height),
+        playerN(_playerN),
         head_x(grid_width / 2),
         head_y(grid_height / 2) {}
 
-  void Update(std::vector<std::shared_ptr<Obstacle>> const obstacles);
+  void launch();
+  void Update();
 
   void GrowBody();
   bool SnakeCell(int x, int y);
+  void GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles);
+  void CheckObstacle(std::vector<std::shared_ptr<Obstacle>> obstacles, SDL_Point curr_cell);
 
   Direction direction = Direction::kUp;
 
@@ -29,6 +34,7 @@ class Snake {
   float head_x;
   float head_y;
   std::vector<SDL_Point> body;
+  int playerN;
 
  private:
   void UpdateHead();
@@ -37,6 +43,8 @@ class Snake {
   bool growing{false};
   int grid_width;
   int grid_height;
+  std::vector<std::thread> threads;
+  std::vector<std::shared_ptr<Obstacle>> _obstacles;
 };
 
 #endif

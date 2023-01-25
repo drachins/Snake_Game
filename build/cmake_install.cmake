@@ -1,4 +1,4 @@
-# Install script for directory: /Users/davidrachinsky/desktop/Udacity/Snake_Game/Snake_Game
+# Install script for directory: /Users/davidrachinsky/Desktop/Udacity/CppND-Capstone-Snake-Game-3/Snake_Game
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/davidrachinsky/desktop/Udacity/Snake_Game/Snake_Game/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/davidrachinsky/Desktop/Udacity/CppND-Capstone-Snake-Game-3/Snake_Game/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

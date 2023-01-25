@@ -1,8 +1,13 @@
 #include "snake.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
-void Snake::Update(std::vector<std::shared_ptr<Obstacle>> const obstacles) {
+void Snake::launch(){
+  threads.emplace_back(std::thread(&Snake::Update(), this));
+}
+
+void Snake::Update() {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // We first capture the head's cell before updating.
@@ -13,12 +18,7 @@ void Snake::Update(std::vector<std::shared_ptr<Obstacle>> const obstacles) {
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
 
   // Check if snake is still alive
-  for(auto itr : obstacles){
-    if(itr->GetObstacleXCoord() == current_cell.x && itr->GetObstacleYCoord() == current_cell.y){
-      alive = false;
-      break;
-    }
-  }
+  CheckObstacle(current_cell);
 
   // Update all of the body vector items if the snake head has moved to a new
   // cell.
@@ -73,7 +73,17 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   }
 }
 
+void Snake::GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles){
+  _obstacles = obstacles;
+}
+
 void Snake::GrowBody() { growing = true; }
+
+void Snake::CheckObstacle(SDL_Point curr_cell){
+  if(std::any_of(_obstacles.begin(), _obstacles.end(), [SDL_Point cell](std::shared_ptr<Obstacle> &itr){ return (itr->GetObstacleXCoord() == cell.x && itr->GetObstacleYCoord() == cell.y);})){
+    alive = false;
+  }
+}
 
 // Inefficient method to check if cell is occupied by snake.
 bool Snake::SnakeCell(int x, int y) {
