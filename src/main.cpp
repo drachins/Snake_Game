@@ -32,7 +32,7 @@ int main() {
   std::vector<int> score = game.GetScore();
   std::vector<int> size = game.GetSize();
   std::cout << "Game has terminated successfully!\n";
-  std::cout << "Score for Player 1 " << game.GetScore() << "\n";
-  std::cout << "Size: " << game.GetSize() << "\n";
+  std::cout << "Score for Player 1: " << score[0] << "Score for Player 2: " << score[1] <<"\n";
+  std::cout << "Size Snake 1: " << size[0] << "Snize Snake 2: " << size[1] << "\n";
   return 0;
 }

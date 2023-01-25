@@ -16,8 +16,8 @@ class Game {
   Game(std::size_t grid_width, std::size_t grid_height, int nPlayers);
   void Run(std::vector<Controller> const &controllers, Renderer &renderer,
            std::size_t target_frame_duration);
-  int GetScore() const;
-  //int GetSize() const;
+  std::vector<int> GetScore() const;
+  std::vector<int> GetSize();
 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;

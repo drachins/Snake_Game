@@ -44,7 +44,7 @@ class Snake {
   int grid_width;
   int grid_height;
   std::vector<std::thread> threads;
-  std::vector<Obstacle> _obstacles;
+  std::vector<std::shared_ptr<Obstacle>> _obstacles;
 };
 
 #endif

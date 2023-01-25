@@ -1,10 +1,11 @@
 #include "snake.h"
+#include "SDL.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 
 void Snake::launch(){
-  threads.emplace_back(std::thread(&Snake::Update(), this));
+  threads.emplace_back(std::thread(&Snake::Update, this));
 }
 
 void Snake::Update() {
@@ -74,13 +75,15 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
 }
 
 void Snake::GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles){
-  _obstacles = obstacles 
+  _obstacles = obstacles; 
 }
 
 void Snake::GrowBody() { growing = true; }
 
 void Snake::CheckObstacle(SDL_Point curr_cell){
-  if(std::any_of(_obstacles.begin(), _obstacles.end(), [SDL_Point cell](std::shared_ptr<Obstacle> &itr){ return (itr->GetObstacleXCoord() == cell.x && itr->GetObstacleYCoord() == cell.y);})){
+  int x = curr_cell.x;
+  int y = curr_cell.y;
+  if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){ return (itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);})){
     alive = false;
   }
 }

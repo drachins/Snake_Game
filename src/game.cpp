@@ -12,7 +12,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       random_h(0, static_cast<int>(grid_height - 1)) {
   
   for(int i = 0; i < nPlayers; i++){
-    _snakes.push_back(std::maked_shared<Snake>(grid_width, grid_height, i));
+    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i));
   }
   PlaceFood();
   PlaceObstacle();
@@ -71,7 +71,7 @@ void Game::PlaceFood() {
       while(true){
         x = random_w(engine);
         y = random_h(engine);
-        if(std::any_of(_snakes.begin(), snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
           fd.x = x;
           fd.y = y;
           _food.push_back(fd);
@@ -105,7 +105,7 @@ void Game::PlaceObstacle() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y)})){
+      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
         obstacle.SetObstacleCoords(x,y);
         _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
         break;
@@ -120,13 +120,18 @@ void Game::PlaceObstacle() {
 
 void Game::Update() {
 
-  if(std::any_of(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){return itr->alive;})){return};
+  
+  for(auto snk : _snakes){
+    if(!snk->alive){
+      return;
+    }
+  }
 
 
   for(int i; i < nPlayers; i++){
     int x_head = static_cast<int>(_snakes[i]->head_x);
     int y_head = static_cast<int>(_snakes[i]->head_y);
-    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return !(itr.x == x_head && itr.y == y_head)})){
+    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return !(itr.x == x_head && itr.y == y_head);})){
       score[i]++;
       _food.erase(_food.begin() + i);
       _snakes[i]->GrowBody();
@@ -139,7 +144,7 @@ void Game::Update() {
 
 std::vector<int> Game::GetScore() const { return score; }
 
-std::vector<int> Game::GetSize() const { 
+std::vector<int> Game::GetSize() { 
   std::vector<int> sizes;
   std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
   return sizes;
