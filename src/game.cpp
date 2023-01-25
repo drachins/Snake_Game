@@ -122,15 +122,12 @@ void Game::Update() {
 
   if(std::any_of(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){return itr->alive;})){return};
 
- 
-  //int new_x = static_cast<int>(snake.head_x);
-  //int new_y = static_cast<int>(snake.head_y);
 
   for(int i; i < nPlayers; i++){
     int x_head = static_cast<int>(_snakes[i]->head_x);
     int y_head = static_cast<int>(_snakes[i]->head_y);
     if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return !(itr.x == x_head && itr.y == y_head)})){
-      score++;
+      score[i]++;
       _food.erase(_food.begin() + i);
       _snakes[i]->GrowBody();
       _snakes[i]->speed += 0.02;
@@ -138,24 +135,12 @@ void Game::Update() {
   }
   PlaceFood();
 
-  // Check if snake head 
-
-  // Check if there's food over here
-
-
- 
-  /*for(int i = 0; i < nFood; i++){
-    if(_food[i].x == new_x && _food[i].y == new_y){
-      score++;
-      _food.erase(_food.begin() + i);
-      PlaceFood();
-      // Grow snake and increase speed.
-      snake.GrowBody();
-      snake.speed += 0.02;      
-    }
-  }*/
-
 }
 
-int Game::GetScore() const { return score; }
-//int Game::GetSize() const { return snake.size; }
+std::vector<int> Game::GetScore() const { return score; }
+
+std::vector<int> Game::GetSize() const { 
+  std::vector<int> sizes;
+  std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
+  return sizes;
+ }

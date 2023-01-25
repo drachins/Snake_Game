@@ -29,8 +29,10 @@ int main() {
   Controller controller;
   Game game(kGridWidth, kGridHeight, nPlayers);
   game.Run(controllers, renderer, kMsPerFrame);
+  std::vector<int> score = game.GetScore();
+  std::vector<int> size = game.GetSize();
   std::cout << "Game has terminated successfully!\n";
-  std::cout << "Score: " << game.GetScore() << "\n";
-  //std::cout << "Size: " << game.GetSize() << "\n";
+  std::cout << "Score for Player 1 " << game.GetScore() << "\n";
+  std::cout << "Size: " << game.GetSize() << "\n";
   return 0;
 }

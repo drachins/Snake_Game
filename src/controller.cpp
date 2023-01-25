@@ -12,7 +12,6 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
 void Controller::HandleInput(bool &running, std::shared_ptr<Snake> snake) const {
   SDL_Event e;
   if(snake->playerN == 0){
-
     while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
         running = false;

@@ -33,7 +33,7 @@ class Game {
   
   std::vector<SDL_Point> _food;
 
-  int score{0};
+  std::vector<int> score{0,0};
   int nFood{2};
   int nObstacles{3};
   int nPlayers;

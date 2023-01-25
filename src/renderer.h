@@ -14,7 +14,7 @@ class Renderer {
   ~Renderer();
 
   void Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vector<SDL_Point> const food, std::vector<std::shared_ptr<Obstacle>> const obstacles);
-  void UpdateWindowTitle(int score, int fps);
+  void UpdateWindowTitle(std::vector<int> score, int fps);
 
 
  private:
