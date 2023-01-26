@@ -1,8 +1,12 @@
 #include "snake.h"
 #include "SDL.h"
+#include "controller.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
+#include <future>
+#include <functional>
+
 
 
 void Snake::launch(){
@@ -11,7 +15,7 @@ void Snake::launch(){
 
 void Snake::run(){
   while(alive){
-    Update();
+    Update();    
     std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
@@ -20,6 +24,17 @@ void Snake::Update() {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // We first capture the head's cell before updating.
+  
+  if(playerN == 0){
+    auto dir = std::async(&Controller::RightController, this);
+    dir.wait();
+    direction = dir.get();
+  }
+  else{
+    auto dir = std::async(&Controller::LeftController, this);
+    dir.wait();
+    direction = dir.get();
+  }
 
   UpdateHead();
   SDL_Point current_cell{
@@ -107,4 +122,8 @@ bool Snake::SnakeCell(int x, int y) {
     }
   }
   return false;
+}
+
+Snake::~Snake(){
+  std::for_each(threads.begin(), threads.end(), [](std::thread &t){t.join();});
 }

@@ -17,6 +17,8 @@ class Snake {
         playerN(_playerN),
         head_x(grid_height/(_playerN + 1)),
         head_y(grid_width/(_playerN + 1)) {}
+
+  ~Snake();
   
         
 

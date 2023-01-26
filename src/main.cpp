@@ -24,13 +24,8 @@ int main() {
   }
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-  std::vector<Controller> controllers;
-  for(int i = 0; i < nPlayers; i++){
-    controllers.push_back(Controller());
-  }
-
   Game game(kGridWidth, kGridHeight, nPlayers);
-  game.Run(controllers, renderer, kMsPerFrame);
+  game.Run(renderer, kMsPerFrame);
   //std::vector<int> score = game.GetScore();
   //std::vector<int> size = game.GetSize();
   std::cout << "Game has terminated successfully!\n";

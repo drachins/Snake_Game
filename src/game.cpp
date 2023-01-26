@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <functional>
 #include "SDL.h"
 #include "game.h"
 
@@ -19,8 +20,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
 }
 
 
-void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
-               std::size_t target_frame_duration) {
+void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
@@ -28,17 +28,16 @@ void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
+  std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
   
   while (running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    for(int i = 0; i < nPlayers; i++){
-      controllers[i].HandleInput(running, _snakes[i]);
-    }
     Update();
     renderer.Render(_snakes, _food, _obstacles);
+
+    CheckForQuit(running);
 
     frame_end = SDL_GetTicks();
 
@@ -46,7 +45,7 @@ void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
     // takes.
     frame_count++;
     frame_duration = frame_end - frame_start;
-
+    std::cout << "echo4" << std::endl;
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
       renderer.UpdateWindowTitle(score, frame_count);
@@ -60,7 +59,10 @@ void Game::Run(std::vector<Controller> const &controllers, Renderer &renderer,
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
+    
+
   }
+  std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
 }
 
 void Game::PlaceFood() {
@@ -134,6 +136,14 @@ void Game::Update() {
   }
   
 
+}
+
+void Game::CheckForQuit(bool &running){
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    if (e.type == SDL_QUIT) {
+    running = false;}
+  }
 }
 
 std::vector<int> Game::GetScore() const { return score; }

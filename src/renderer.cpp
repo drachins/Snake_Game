@@ -43,6 +43,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
+  
 
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
@@ -57,7 +58,6 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   }
 
   // Render snake's body
-
   for(auto snk : snakes){
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     for (SDL_Point const &point : snk->body) {
@@ -66,6 +66,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
       SDL_RenderFillRect(sdl_renderer, &block);
     }
   }
+  
   // Render obstacles
   for(auto itr : obstacles){
     SDL_SetRenderDrawColor(sdl_renderer, 0x7A, 0xF9, 0X4F, 0xFF);
@@ -73,8 +74,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
     block.y = itr->GetObstacleYCoord() * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
-
-
+  std::cout << "echo1" << std::endl;
   // Render snake's head
   for(auto snk : snakes){
     block.x = static_cast<int>(snk->head_x) * block.w;
@@ -89,15 +89,17 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
+  
+  
 }
 
 void Renderer::UpdateWindowTitle(std::vector<int> score, int fps) {
   std::string title;
   if(score.size() > 1){
-    title = "Snake 1" + std::to_string(score[0]) + "Snake 2" +std::to_string(score[1]) + " FPS: " + std::to_string(fps);
+    title = " Snake 1 " + std::to_string(score[0]) + " Snake 2 " +std::to_string(score[1]) + " FPS: " + std::to_string(fps);
   }
   else{
-    title = "Snake 1 " + std::to_string(score[0]) + " FPS: " + std::to_string(fps);
+    title = " Snake 1 " + std::to_string(score[0]) + " FPS: " + std::to_string(fps);
   }
   
   SDL_SetWindowTitle(sdl_window, title.c_str());
