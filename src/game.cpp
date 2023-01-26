@@ -1,7 +1,8 @@
 
 #include <iostream>
-#include <iterator>
 #include <algorithm>
+#include <thread>
+#include <functional>
 #include "SDL.h"
 #include "game.h"
 
@@ -18,6 +19,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   PlaceObstacle();
 }
 
+
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
@@ -26,14 +28,22 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
+  
+  Controller player_1_controller;
+  Controller player_2_controller;
+
 
   while (running) {
+
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, _snakes[0]);
     Update();
     renderer.Render(_snakes, _food, _obstacles);
+    std::thread right_controller = std::thread(&Controller::RightController, player_1_controller, std::ref(running), std::ref(_snakes[0]));
+    std::thread left_controller = std::thread(&Controller::LeftController, player_2_controller, std::ref(running), std::ref(_snakes[1]));
+    right_controller.join();
+    left_controller.join();
 
     frame_end = SDL_GetTicks();
 
