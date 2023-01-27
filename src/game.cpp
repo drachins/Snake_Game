@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <iterator>
 #include <algorithm>
 #include <functional>
 #include "SDL.h"
@@ -29,11 +28,26 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   bool running = true;
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
-  
+
+  for(int i = 0; i < nPlayers; i++){
+     Controller controller;
+    _controllers.push_back(controller);
+  }
+
   while (running) {
+
+    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::RightController, _controllers[0], std::ref(running), std::ref(_snakes[0])));
+    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::LeftController, _controllers[1], std::ref(running),std::ref(_snakes[1])));
+
+    for(const std::future<void> &ftr : _controller_tasks){
+      ftr.wait();
+    }
+
+
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
+
     Update();
     renderer.Render(_snakes, _food, _obstacles);
 
@@ -45,7 +59,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     // takes.
     frame_count++;
     frame_duration = frame_end - frame_start;
-    std::cout << "echo4" << std::endl;
+
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
       renderer.UpdateWindowTitle(score, frame_count);

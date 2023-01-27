@@ -4,6 +4,7 @@
 #include <random>
 #include <memory>
 #include <vector>
+#include <future>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -21,6 +22,7 @@ class Game {
 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;
+  std::vector<Controller> _controllers;
   
 
  private:
@@ -32,7 +34,7 @@ class Game {
 
   
   std::vector<SDL_Point> _food;
-
+  std::vector<std::future<void>> _controller_tasks;
   std::vector<int> score{0,0};
   int nFood{2};
   int nObstacles{3};

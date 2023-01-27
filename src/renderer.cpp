@@ -74,14 +74,20 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
     block.y = itr->GetObstacleYCoord() * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
-  std::cout << "echo1" << std::endl;
+
   // Render snake's head
   for(auto snk : snakes){
     block.x = static_cast<int>(snk->head_x) * block.w;
     block.y = static_cast<int>(snk->head_y) * block.h;
     if (snk->alive) {
-      SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-    } else {
+      if(snk->playerN == 0){
+        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+      }
+      else{ 
+        SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x91, 0x00, 0xFF);
+      }
+    } 
+    else {
       SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
     }
     SDL_RenderFillRect(sdl_renderer, &block);    

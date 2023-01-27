@@ -25,16 +25,6 @@ void Snake::Update() {
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // We first capture the head's cell before updating.
   
-  if(playerN == 0){
-    auto dir = std::async(&Controller::RightController, this);
-    dir.wait();
-    direction = dir.get();
-  }
-  else{
-    auto dir = std::async(&Controller::LeftController, this);
-    dir.wait();
-    direction = dir.get();
-  }
 
   UpdateHead();
   SDL_Point current_cell{
