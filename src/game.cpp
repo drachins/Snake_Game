@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include "SDL.h"
 #include "game.h"
 
@@ -36,8 +37,9 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
   while (running) {
 
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::RightController, _controllers[0], std::ref(running), std::ref(_snakes[0])));
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::LeftController, _controllers[1], std::ref(running),std::ref(_snakes[1])));
+
+    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::RightController, _controllers.at(0), std::ref(running), std::ref(_snakes.at(0))));
+    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::LeftController, _controllers.at(0), std::ref(running),std::ref(_snakes.at(1))));
 
     for(const std::future<void> &ftr : _controller_tasks){
       ftr.wait();
@@ -138,19 +140,23 @@ void Game::Update() {
 
   
   for(int i = 0; i < nPlayers; i++){
-    int x_head = static_cast<int>(_snakes[i]->head_x);
-    int y_head = static_cast<int>(_snakes[i]->head_y);
-    if(std::any_of(_food.begin(), _food.end(), [x_head, y_head](SDL_Point itr){return (itr.x == x_head && itr.y == y_head);})){
-      score[i]++;
-      _food.erase(_food.begin() + i);
-      _snakes[i]->GrowBody();
-      _snakes[i]->speed += 0.02;
-      PlaceFood();
+    int x = static_cast<int>(_snakes.at(i)->head_x);
+    int y = static_cast<int>(_snakes.at(i)->head_y);
+    int t = 0;
+    for(auto fdr : _food){
+      if(fdr.x == x && fdr.y == y){
+        _food.erase(_food.begin() + t);
+        score[i]++;
+        _snakes.at(i)->GrowBody();
+        _snakes.at(i)->speed += 0.02;
+        PlaceFood();
+        break;
+      }
+      t++;
     }
   }
-  
-
 }
+
 
 void Game::CheckForQuit(bool &running){
   SDL_Event e;
@@ -167,3 +173,4 @@ std::vector<int> Game::GetSize() {
   std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
   return sizes;
  }
+

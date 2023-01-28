@@ -46,12 +46,12 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   
 
   // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x97, 0x7B, 0x7B, 0x62);
   SDL_RenderClear(sdl_renderer);
 
   // Render food
   for(auto fdr : food){
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(sdl_renderer, 0x7A, 0xF9, 0X4F, 0xFF);
     block.x = fdr.x * block.w;
     block.y = fdr.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);    
@@ -69,7 +69,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   
   // Render obstacles
   for(auto itr : obstacles){
-    SDL_SetRenderDrawColor(sdl_renderer, 0x7A, 0xF9, 0X4F, 0xFF);
+    SDL_SetRenderDrawColor(sdl_renderer, 0xA0, 0xA0, 0XA0, 0xFF);
     block.x = itr->GetObstacleXCoord() * block.w;
     block.y = itr->GetObstacleYCoord() * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
