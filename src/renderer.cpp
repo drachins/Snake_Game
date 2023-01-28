@@ -74,7 +74,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
     block.y = itr->GetObstacleYCoord() * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
-  std::cout << "echo1" << std::endl;
+  
   // Render snake's head
   for(auto snk : snakes){
     block.x = static_cast<int>(snk->head_x) * block.w;

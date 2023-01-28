@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "controller.h"
 #include "game.h"
 #include "renderer.h"
 

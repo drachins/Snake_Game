@@ -4,8 +4,8 @@
 #include <random>
 #include <memory>
 #include <vector>
+#include <future>
 #include "SDL.h"
-#include "controller.h"
 #include "renderer.h"
 #include "snake.h"
 #include "obstacle.h"
@@ -29,10 +29,9 @@ class Game {
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
   std::uniform_int_distribution<int> random_h;
-
   
   std::vector<SDL_Point> _food;
-
+  std::vector<std::future<void>>  _contoller_tasks;
   std::vector<int> score{0,0};
   int nFood{2};
   int nObstacles{3};

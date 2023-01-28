@@ -7,6 +7,7 @@
 #include "SDL.h"
 #include "obstacle.h"
 
+
 class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
@@ -45,7 +46,6 @@ class Snake {
  private:
   void UpdateHead();
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
-
   bool growing{false};
   int grid_width;
   int grid_height;
@@ -53,4 +53,19 @@ class Snake {
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
 };
 
+class Controller {
+ public:
+    
+    void RightController(Snake &snake) const;
+    void LeftController(Snake &snake) const;
+
+
+
+ private:
+    void ChangeDirection(Snake &snake, Snake::Direction input,
+                       Snake::Direction opposite) const;
+    
+};
+
 #endif
+

@@ -1,11 +1,10 @@
 #include "snake.h"
-#include "SDL.h"
-#include "controller.h"
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 #include <future>
 #include <functional>
+
 
 
 
@@ -25,15 +24,16 @@ void Snake::Update() {
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // We first capture the head's cell before updating.
   
+  Controller controller;
+  
   if(playerN == 0){
-    auto dir = std::async(&Controller::RightController, this);
+    std::future<void> dir = std::async(std::launch::async, &Controller::RightController, std::ref(controller), this);
     dir.wait();
-    direction = dir.get();
+ 
   }
   else{
-    auto dir = std::async(&Controller::LeftController, this);
+    std::future<void> dir = std::async(std::launch::async, &Controller::LeftController, std::ref(controller), this);
     dir.wait();
-    direction = dir.get();
   }
 
   UpdateHead();
@@ -127,3 +127,64 @@ bool Snake::SnakeCell(int x, int y) {
 Snake::~Snake(){
   std::for_each(threads.begin(), threads.end(), [](std::thread &t){t.join();});
 }
+
+void Controller::ChangeDirection(Snake &snake, Snake::Direction input,Snake::Direction opposite) const {
+
+  if (snake.direction != opposite || snake.size == 1) snake.direction = input;
+
+
+}
+
+
+void Controller::RightController(Snake &snake) const {
+
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    if (e.type == SDL_KEYDOWN) {
+      switch (e.key.keysym.sym) {
+        case SDLK_UP:
+        ChangeDirection(snake, Snake::Direction::kUp, Snake::Direction::kDown);
+        break;
+
+        case SDLK_DOWN:
+        ChangeDirection(snake, Snake::Direction::kDown, Snake::Direction::kUp);
+        break;
+
+        case SDLK_LEFT:
+        ChangeDirection(snake, Snake::Direction::kLeft, Snake::Direction::kRight);
+        break;
+
+        case SDLK_RIGHT:
+        ChangeDirection(snake, Snake::Direction::kRight,Snake::Direction::kLeft);
+        break;
+      }
+    }   
+  }
+}
+
+
+void Controller::LeftController(Snake &snake) const {
+
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    if (e.type == SDL_KEYDOWN){
+      switch(e.key.keysym.sym){
+        case SDLK_w:
+        ChangeDirection(snake, Snake::Direction::kUp, Snake::Direction::kDown);
+        break;
+
+        case SDLK_s:
+        ChangeDirection(snake, Snake::Direction::kDown, Snake::Direction::kUp);
+        break;
+
+        case SDLK_d:
+        ChangeDirection(snake, Snake::Direction::kLeft, Snake::Direction::kRight);
+        break;
+
+        case SDLK_a:
+        ChangeDirection(snake, Snake::Direction::kRight, Snake::Direction::kLeft);
+        break;
+      }
+    }           
+  }
+} 
