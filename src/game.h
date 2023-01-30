@@ -18,7 +18,6 @@ class Game {
   void Run(Renderer &renderer,std::size_t target_frame_duration);
   std::vector<int> GetScore() const;
   std::vector<int> GetSize();
-  void CheckForQuit(bool &running);
 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;

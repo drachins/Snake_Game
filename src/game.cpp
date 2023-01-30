@@ -49,8 +49,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     Update();
     renderer.Render(_snakes, _food, _obstacles);
 
-    CheckForQuit(running);
-
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle
@@ -153,14 +151,6 @@ void Game::Update() {
   }
 }
 
-
-void Game::CheckForQuit(bool &running){
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_QUIT) {
-    running = false;}
-  }
-}
 
 std::vector<int> Game::GetScore() const { return score; }
 
