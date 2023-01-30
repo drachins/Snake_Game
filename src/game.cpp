@@ -28,25 +28,23 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   int frame_count = 0;
   bool running = true;
 
-  std::cout << "echo0" << std::endl;
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
+
 
   Controller controller;
 
   while (running) {
 
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::HandleInput, std::ref(controller), std::ref(running), _snakes));
-    
-    for(const std::future<void> &ftr : _controller_tasks){
-      ftr.wait();
-    }
-
-
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-
+    if(nPlayers < 2){
+      controller.HandleInput1Player(running, _snakes);
+    }
+    else{
+      controller.HandleInput2Players(running, _snakes);
+    }
     Update();
     renderer.Render(_snakes, _food, _obstacles);
 
@@ -133,21 +131,23 @@ void Game::PlaceObstacle() {
 
 void Game::Update() {
 
-
-
   
   for(int i = 0; i < nPlayers; i++){
     int x = static_cast<int>(_snakes.at(i)->head_x);
     int y = static_cast<int>(_snakes.at(i)->head_y);
-    if(i < 1){
-      if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-        _snakes.at(i)->alive = false;
+    if(nPlayers > 1){
+      if(i < 1){
+        if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);}) || (x == static_cast<int>(_snakes.at(i+1)->head_x) && y == static_cast<int>(_snakes.at(i+1)->head_y))){
+          _snakes.at(i)->alive = false;
+          _snakes.at(i+1)->alive = false;
+        }
       }
-    }
-    else{
-      if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-        _snakes.at(i)->alive = false;
-      } 
+      else{
+        if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);}) || (x == static_cast<int>(_snakes.at(i-1)->head_x) && y == static_cast<int>(_snakes.at(i-1)->head_y))){
+          _snakes.at(i)->alive = false;
+          _snakes.at(i-1)->alive = false;
+        } 
+      }
     }
     
     int t = 0;
