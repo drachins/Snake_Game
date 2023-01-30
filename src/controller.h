@@ -5,8 +5,7 @@
 
 class Controller {
  public:
-  void RightController(bool &running, std::shared_ptr<Snake> snake) const;
-  void LeftController(bool &running, std::shared_ptr<Snake> snake) const;
+  void HandleInput(bool &running, std::vector<std::shared_ptr<Snake>> snake) const;
 
  private:
   void ChangeDirection(Snake &snake, Snake::Direction input,

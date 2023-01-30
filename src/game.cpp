@@ -17,6 +17,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   }
   PlaceFood();
   PlaceObstacle();
+  std::cout << _snakes.at(0)->playerN << " " << _snakes.at(1)->playerN << std::endl;
 }
 
 
@@ -30,17 +31,12 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
 
-  for(int i = 0; i < nPlayers; i++){
-     Controller controller;
-    _controllers.push_back(controller);
-  }
+  Controller controller;
 
   while (running) {
 
-
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::RightController, _controllers.at(0), std::ref(running), std::ref(_snakes.at(0))));
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::LeftController, _controllers.at(0), std::ref(running),std::ref(_snakes.at(1))));
-
+    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::HandleInput, std::ref(controller), std::ref(running), _snakes));
+    
     for(const std::future<void> &ftr : _controller_tasks){
       ftr.wait();
     }

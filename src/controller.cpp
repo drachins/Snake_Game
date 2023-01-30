@@ -10,7 +10,7 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
 }
 
 
-void Controller::RightController(bool &running, std::shared_ptr<Snake> snake) const {
+void Controller::HandleInput(bool &running, std::vector<std::shared_ptr<Snake>> snakes) const {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
 
@@ -20,60 +20,48 @@ void Controller::RightController(bool &running, std::shared_ptr<Snake> snake) co
 
     else if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
+
         case SDLK_UP:
-          ChangeDirection(*snake, Snake::Direction::kUp,
+          ChangeDirection(*snakes.at(0), Snake::Direction::kUp,
                           Snake::Direction::kDown);
           break;
 
         case SDLK_DOWN:
-          ChangeDirection(*snake, Snake::Direction::kDown,
+          ChangeDirection(*snakes.at(0), Snake::Direction::kDown,
                           Snake::Direction::kUp);
           break;
 
         case SDLK_LEFT:
-          ChangeDirection(*snake, Snake::Direction::kLeft,
+          ChangeDirection(*snakes.at(0), Snake::Direction::kLeft,
                           Snake::Direction::kRight);
           break;
 
         case SDLK_RIGHT:
-          ChangeDirection(*snake, Snake::Direction::kRight,
+          ChangeDirection(*snakes.at(0), Snake::Direction::kRight,
                           Snake::Direction::kLeft);
           break;
-      }
-    }
-  }
-}
 
-void Controller::LeftController(bool &running, std::shared_ptr<Snake> snake) const {
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-
-    if(e.type == SDL_QUIT){
-      running = false;
-    }
-
-    else if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
         case SDLK_w:
-          ChangeDirection(*snake, Snake::Direction::kUp,
-                          Snake::Direction::kDown);
+          ChangeDirection(*snakes.at(1), Snake::Direction::kUp,
+                            Snake::Direction::kDown);
           break;
-
+          
         case SDLK_s:
-          ChangeDirection(*snake, Snake::Direction::kDown,
+          ChangeDirection(*snakes.at(1), Snake::Direction::kDown,
                           Snake::Direction::kUp);
           break;
 
         case SDLK_a:
-          ChangeDirection(*snake, Snake::Direction::kLeft,
+          ChangeDirection(*snakes.at(1), Snake::Direction::kLeft,
                           Snake::Direction::kRight);
           break;
 
         case SDLK_d:
-          ChangeDirection(*snake, Snake::Direction::kRight,
+          ChangeDirection(*snakes.at(1), Snake::Direction::kRight,
                           Snake::Direction::kLeft);
           break;
       }
     }
   }
 }
+
