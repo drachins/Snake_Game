@@ -46,7 +46,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   
 
   // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x97, 0x7B, 0x7B, 0x62);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
   // Render food
@@ -102,10 +102,10 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
 void Renderer::UpdateWindowTitle(std::vector<int> score, int fps) {
   std::string title;
   if(score.size() > 1){
-    title = " Snake 1: " + std::to_string(score[0]) + "  Snake 2: " +std::to_string(score[1]) + "  FPS: " + std::to_string(fps);
+    title = " Snake 1: " + std::to_string(score.at(0)) + "   Snake 2: " +std::to_string(score.at(1)) + "   FPS: " + std::to_string(fps);
   }
   else{
-    title = " Snake 1 " + std::to_string(score[0]) + " FPS: " + std::to_string(fps);
+    title = " Snake 1: " + std::to_string(score.at(0)) + "   FPS: " + std::to_string(fps);
   }
   
   SDL_SetWindowTitle(sdl_window, title.c_str());

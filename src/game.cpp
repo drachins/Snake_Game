@@ -14,6 +14,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   
   for(int i = 0; i < nPlayers; i++){
     _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i));
+    score.push_back(0);
+    snake_sizes.push_back(0);
   }
   PlaceFood();
   PlaceObstacle();
@@ -154,9 +156,10 @@ void Game::Update() {
     for(auto fdr : _food){
       if(fdr.x == x && fdr.y == y){
         _food.erase(_food.begin() + t);
-        score[i]++;
+        score.at(i)++;
         _snakes.at(i)->GrowBody();
         _snakes.at(i)->speed += 0.02;
+        snake_sizes.at(i) = _snakes.at(i)->size;
         PlaceFood();
         break;
       }
@@ -166,11 +169,19 @@ void Game::Update() {
 }
 
 
-std::vector<int> Game::GetScore() const { return score; }
+ Game::~Game(){
 
-std::vector<int> Game::GetSize() { 
-  std::vector<int> sizes;
-  std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
-  return sizes;
+   if(snake_sizes.size() > 1){
+    std::cout << "Score for Player 1: " << score.at(0) << "  " << "Score for Player 2: " << score.at(1) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(0) << "  " << "Size of Snake 2: " << snake_sizes.at(1) << std::endl;
+   }
+   else{
+    std::cout << "Score for Player 1: " << score.at(0) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(0) <<  std::endl;
+   }
+
+   std::cout << "Thank you for playing!" << std::endl;
+
+
  }
 
