@@ -7,6 +7,9 @@
 #include "SDL.h"
 #include "obstacle.h"
 
+
+
+
 class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
@@ -33,7 +36,6 @@ class Snake {
 
 
   Direction direction = Direction::kUp;
-
   float speed{0.1f};
   int size{1};
   bool alive{true};
@@ -43,6 +45,8 @@ class Snake {
   int playerN;
 
  private:
+ 
+
   void UpdateHead();
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
 

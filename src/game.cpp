@@ -17,7 +17,6 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   }
   PlaceFood();
   PlaceObstacle();
-  std::cout << _snakes.at(0)->playerN << " " << _snakes.at(1)->playerN << std::endl;
 }
 
 
@@ -28,6 +27,8 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
+
+  std::cout << "echo0" << std::endl;
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
 
@@ -132,10 +133,23 @@ void Game::PlaceObstacle() {
 
 void Game::Update() {
 
+
+
   
   for(int i = 0; i < nPlayers; i++){
     int x = static_cast<int>(_snakes.at(i)->head_x);
     int y = static_cast<int>(_snakes.at(i)->head_y);
+    if(i < 1){
+      if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+        _snakes.at(i)->alive = false;
+      }
+    }
+    else{
+      if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+        _snakes.at(i)->alive = false;
+      } 
+    }
+    
     int t = 0;
     for(auto fdr : _food){
       if(fdr.x == x && fdr.y == y){
