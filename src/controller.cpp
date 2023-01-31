@@ -7,7 +7,6 @@
 
 void Controller::launch(){
   _threads.emplace_back(&Controller::run, this);
-  std::cout << _threads.at(0).get_id() << std::endl;
 }
 
 void Controller::run(){

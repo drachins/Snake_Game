@@ -46,7 +46,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::vec
   
 
   // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x97, 0x7B, 0x7B, 0x62);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
   // Render food

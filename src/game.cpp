@@ -179,11 +179,13 @@ void Game::Update() {
       if(i < 1){
         if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
           _snakes.at(i)->alive = false;
+          _snakes.at(i+1)->alive = false;
         }
       }
       else{
         if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
           _snakes.at(i)->alive = false;
+          _snakes.at(i-1)->alive = false;
         } 
       }
     }

@@ -9,7 +9,6 @@
 
 void Snake::launch(){
   threads.emplace_back(&Snake::run, this);
-  std::cout << threads.at(0).get_id() << std::endl;
 }
 
 void Snake::run(){
