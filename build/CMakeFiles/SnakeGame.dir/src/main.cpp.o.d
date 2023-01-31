@@ -161,11 +161,20 @@ CMakeFiles/SnakeGame.dir/src/main.cpp.o: \
  /usr/include/c++/7/backward/auto_ptr.h /usr/include/c++/7/thread \
  /usr/include/c++/7/chrono /usr/include/c++/7/ratio \
  /usr/include/c++/7/ctime /usr/include/c++/7/bits/parse_numbers.h \
- /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
- /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
- /usr/include/SDL2/SDL_platform.h /usr/include/SDL2/begin_code.h \
- /usr/include/SDL2/close_code.h /usr/include/c++/7/stdlib.h \
- /usr/include/string.h /usr/include/strings.h \
+ /usr/include/c++/7/algorithm /usr/include/c++/7/bits/stl_algo.h \
+ /usr/include/c++/7/bits/algorithmfwd.h \
+ /usr/include/c++/7/bits/stl_heap.h \
+ /usr/include/c++/7/bits/uniform_int_dist.h /usr/include/c++/7/functional \
+ /usr/include/c++/7/bits/std_function.h /usr/include/c++/7/unordered_map \
+ /usr/include/c++/7/bits/hashtable.h \
+ /usr/include/c++/7/bits/hashtable_policy.h \
+ /usr/include/c++/7/bits/node_handle.h /usr/include/c++/7/optional \
+ /usr/include/c++/7/bits/enable_special_members.h \
+ /usr/include/c++/7/bits/unordered_map.h /usr/include/SDL2/SDL.h \
+ /usr/include/SDL2/SDL_main.h /usr/include/SDL2/SDL_stdinc.h \
+ /usr/include/SDL2/SDL_config.h /usr/include/SDL2/SDL_platform.h \
+ /usr/include/SDL2/begin_code.h /usr/include/SDL2/close_code.h \
+ /usr/include/c++/7/stdlib.h /usr/include/string.h /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/inttypes.h /usr/include/c++/7/math.h \
@@ -251,12 +260,10 @@ CMakeFiles/SnakeGame.dir/src/main.cpp.o: \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/obstacle.h \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/game.h \
  /usr/include/c++/7/random /usr/include/c++/7/bits/random.h \
- /usr/include/c++/7/bits/uniform_int_dist.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/opt_random.h \
  /usr/include/c++/7/bits/random.tcc /usr/include/c++/7/numeric \
- /usr/include/c++/7/bits/stl_numeric.h /usr/include/c++/7/future \
+ /usr/include/c++/7/bits/stl_numeric.h /usr/include/c++/7/deque \
+ /usr/include/c++/7/bits/stl_deque.h /usr/include/c++/7/bits/deque.tcc \
  /usr/include/c++/7/mutex /usr/include/c++/7/bits/std_mutex.h \
- /usr/include/c++/7/condition_variable /usr/include/c++/7/atomic \
- /usr/include/c++/7/bits/atomic_futex.h \
- /usr/include/c++/7/bits/std_function.h \
+ /usr/include/c++/7/condition_variable \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h

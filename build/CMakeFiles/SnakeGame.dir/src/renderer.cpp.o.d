@@ -230,7 +230,17 @@ CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/snake.h \
  /usr/include/c++/7/thread /usr/include/c++/7/chrono \
  /usr/include/c++/7/ratio /usr/include/c++/7/ctime \
- /usr/include/c++/7/bits/parse_numbers.h \
+ /usr/include/c++/7/bits/parse_numbers.h /usr/include/c++/7/algorithm \
+ /usr/include/c++/7/bits/stl_algo.h \
+ /usr/include/c++/7/bits/algorithmfwd.h \
+ /usr/include/c++/7/bits/stl_heap.h \
+ /usr/include/c++/7/bits/uniform_int_dist.h /usr/include/c++/7/functional \
+ /usr/include/c++/7/bits/std_function.h /usr/include/c++/7/unordered_map \
+ /usr/include/c++/7/bits/hashtable.h \
+ /usr/include/c++/7/bits/hashtable_policy.h \
+ /usr/include/c++/7/bits/node_handle.h /usr/include/c++/7/optional \
+ /usr/include/c++/7/bits/enable_special_members.h \
+ /usr/include/c++/7/bits/unordered_map.h \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/obstacle.h \
  /usr/include/c++/7/iostream /usr/include/c++/7/ostream \
  /usr/include/c++/7/ios /usr/include/c++/7/bits/ios_base.h \

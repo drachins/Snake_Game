@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include <thread>
+#include <algorithm>
+#include <functional>
 #include "SDL.h"
 #include "obstacle.h"
 

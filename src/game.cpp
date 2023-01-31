@@ -2,9 +2,11 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
-#include <iterator>
 #include "SDL.h"
 #include "game.h"
+#include "controller.h"
+
+
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
     : engine(dev()),
@@ -14,9 +16,18 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   
   for(int i = 0; i < nPlayers; i++){
     _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i));
+    score.push_back(0);
+    snake_sizes.push_back(0);
   }
   PlaceFood();
   PlaceObstacle();
+}
+
+SDL_Keycode Game::waitForEventMsg(){
+
+  key = _eventMsgs.recieve();
+  return key;
+
 }
 
 
@@ -26,36 +37,38 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
-  bool running = true;
+  bool running{true};
+
+  Controller controller1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, _snakes.at(0));
+  Controller controller2(SDLK_w, SDLK_s, SDLK_a, SDLK_d, _snakes.at(1));
+
+  controller1.setGameHandle(this);
+  controller2.setGameHandle(this);
 
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
 
-  for(int i = 0; i < nPlayers; i++){
+  controller1.launch();
+  controller2.launch();
   
-    if(i == 0){
-       Controller controller(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
-      _controllers.push_back(controller);
-    }
-    else{
-      Controller controller(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
-      _controllers.push_back(controller);
-    }
-  }
-
+  
+  /*for(int i = 0; i < nPlayers; i++){
+    _controllers.at(i).launch(running, _snakes.at(i));
+  }*/
 
 
   while (running) {
 
-
-    for(int i = 0; i < nPlayers; i++){
-        _controller_tasks.emplace_back(std::async(std::launch::async, &Controller::HandleInput, _controllers.at(i), std::ref(running), std::ref(_snakes.at(i))));
+    SDL_Event e;
+    while(SDL_PollEvent(&e)){
+      if(e.type == SDL_QUIT){
+        running = false;
+      }
+      else if(e.type == SDL_KEYDOWN){
+        _eventMsgs.send(std::move(e.key.keysym.sym));
+      }
     }
 
-    for(std::future<void> &ftr : _controller_tasks){
-      ftr.wait();
-    }
-    
 
     frame_start = SDL_GetTicks();
 
@@ -89,6 +102,8 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
   }
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
+  controller1.control_running = false;
+  controller2.control_running = false;
 }
 
 void Game::PlaceFood() {
@@ -175,6 +190,7 @@ void Game::Update() {
         score[i]++;
         _snakes.at(i)->GrowBody();
         _snakes.at(i)->speed += 0.02;
+        snake_sizes.at(i) = _snakes.at(i)->size;
         PlaceFood();
         break;
       }
@@ -184,11 +200,21 @@ void Game::Update() {
 }
 
 
-std::vector<int> Game::GetScore() const { return score; }
 
-std::vector<int> Game::GetSize() { 
-  std::vector<int> sizes;
-  std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
-  return sizes;
- }
+Game::~Game(){
+
+
+  if(snake_sizes.size() > 1){
+  std::cout << "Score for Player 1: " << score.at(0) << "  " << "Score for Player 2: " << score.at(1) << std::endl;
+  std::cout << "Size of Snake 1: " << snake_sizes.at(0) << "  " << "Size of Snake 2: " << snake_sizes.at(1) << std::endl;
+  }
+  else{
+  std::cout << "Score for Player 1: " << score.at(0) << std::endl;
+  std::cout << "Size of Snake 1: " << snake_sizes.at(0) <<  std::endl;
+  }
+
+  std::cout << "Thank you for playing!" << std::endl;
+
+
+}
 
