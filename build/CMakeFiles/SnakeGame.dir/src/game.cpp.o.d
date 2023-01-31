@@ -257,13 +257,10 @@ CMakeFiles/SnakeGame.dir/src/game.cpp.o: \
  /usr/include/c++/7/bits/shared_ptr_atomic.h \
  /usr/include/c++/7/bits/atomic_base.h \
  /usr/include/c++/7/bits/atomic_lockfree_defines.h \
- /usr/include/c++/7/backward/auto_ptr.h /usr/include/c++/7/deque \
- /usr/include/c++/7/bits/stl_deque.h /usr/include/c++/7/bits/deque.tcc \
- /usr/include/c++/7/mutex /usr/include/c++/7/chrono \
- /usr/include/c++/7/ratio /usr/include/c++/7/ctime \
- /usr/include/c++/7/bits/parse_numbers.h \
+ /usr/include/c++/7/backward/auto_ptr.h /usr/include/c++/7/mutex \
+ /usr/include/c++/7/chrono /usr/include/c++/7/ratio \
+ /usr/include/c++/7/ctime /usr/include/c++/7/bits/parse_numbers.h \
  /usr/include/c++/7/bits/std_mutex.h \
- /usr/include/c++/7/condition_variable \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/snake.h \
  /usr/include/c++/7/thread \

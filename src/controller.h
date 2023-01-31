@@ -7,12 +7,13 @@ class Game;
 
 class Controller {
  public:
-  Controller(SDL_Keycode up, SDL_Keycode down, SDL_Keycode left, SDL_Keycode right, std::shared_ptr<Snake> snake)
+  Controller(SDL_Keycode up, SDL_Keycode down, SDL_Keycode left, SDL_Keycode right, std::shared_ptr<Snake> snake, int nPlayer)
     :_Up(up),
      _Down(down),
      _Left(left),
      _Right(right),
-     _snake(snake){};
+     _snake(snake),
+     _nPlayer(nPlayer){};
   
   ~Controller();
 
@@ -22,7 +23,7 @@ class Controller {
   void setGameHandle(Game *game);
 
   bool control_running;
-
+  int _nPlayer;
 
  private:
   void ChangeDirection(Snake::Direction input, Snake::Direction opposite);

@@ -343,12 +343,8 @@ CMakeFiles/SnakeGame.dir/src/controller.cpp.o: /home/davidrachinsky/udacity/CppN
   /usr/include/c++/7/bits/random.tcc \
   /usr/include/c++/7/numeric \
   /usr/include/c++/7/bits/stl_numeric.h \
-  /usr/include/c++/7/deque \
-  /usr/include/c++/7/bits/stl_deque.h \
-  /usr/include/c++/7/bits/deque.tcc \
   /usr/include/c++/7/mutex \
   /usr/include/c++/7/bits/std_mutex.h \
-  /usr/include/c++/7/condition_variable \
   /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h
 
 CMakeFiles/SnakeGame.dir/src/game.cpp.o: /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/game.cpp \
@@ -685,16 +681,12 @@ CMakeFiles/SnakeGame.dir/src/game.cpp.o: /home/davidrachinsky/udacity/CppND-Caps
   /usr/include/c++/7/bits/atomic_base.h \
   /usr/include/c++/7/bits/atomic_lockfree_defines.h \
   /usr/include/c++/7/backward/auto_ptr.h \
-  /usr/include/c++/7/deque \
-  /usr/include/c++/7/bits/stl_deque.h \
-  /usr/include/c++/7/bits/deque.tcc \
   /usr/include/c++/7/mutex \
   /usr/include/c++/7/chrono \
   /usr/include/c++/7/ratio \
   /usr/include/c++/7/ctime \
   /usr/include/c++/7/bits/parse_numbers.h \
   /usr/include/c++/7/bits/std_mutex.h \
-  /usr/include/c++/7/condition_variable \
   /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h \
   /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/snake.h \
   /usr/include/c++/7/thread \
@@ -1043,12 +1035,8 @@ CMakeFiles/SnakeGame.dir/src/main.cpp.o: /home/davidrachinsky/udacity/CppND-Caps
   /usr/include/c++/7/bits/random.tcc \
   /usr/include/c++/7/numeric \
   /usr/include/c++/7/bits/stl_numeric.h \
-  /usr/include/c++/7/deque \
-  /usr/include/c++/7/bits/stl_deque.h \
-  /usr/include/c++/7/bits/deque.tcc \
   /usr/include/c++/7/mutex \
   /usr/include/c++/7/bits/std_mutex.h \
-  /usr/include/c++/7/condition_variable \
   /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h
 
 CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o: /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/obstacle.cpp \
@@ -2021,10 +2009,6 @@ CMakeFiles/SnakeGame.dir/src/snake.cpp.o: /home/davidrachinsky/udacity/CppND-Cap
 
 /usr/include/c++/7/mutex:
 
-/usr/include/c++/7/bits/deque.tcc:
-
-/usr/include/c++/7/bits/stl_deque.h:
-
 /usr/include/x86_64-linux-gnu/c++/7/bits/opt_random.h:
 
 /usr/include/c++/7/numeric:
@@ -2168,8 +2152,6 @@ CMakeFiles/SnakeGame.dir/src/snake.cpp.o: /home/davidrachinsky/udacity/CppND-Cap
 /usr/include/c++/7/bits/locale_facets.tcc:
 
 /usr/include/x86_64-linux-gnu/c++/7/bits/c++allocator.h:
-
-/usr/include/c++/7/condition_variable:
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
 
@@ -2538,8 +2520,6 @@ CMakeFiles/SnakeGame.dir/src/snake.cpp.o: /home/davidrachinsky/udacity/CppND-Cap
 /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.cpp:
 
 /usr/include/errno.h:
-
-/usr/include/c++/7/deque:
 
 /usr/include/c++/7/bits/string_view.tcc:
 

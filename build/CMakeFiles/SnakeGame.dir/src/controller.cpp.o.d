@@ -262,8 +262,6 @@ CMakeFiles/SnakeGame.dir/src/controller.cpp.o: \
  /usr/include/c++/7/random /usr/include/c++/7/bits/random.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/opt_random.h \
  /usr/include/c++/7/bits/random.tcc /usr/include/c++/7/numeric \
- /usr/include/c++/7/bits/stl_numeric.h /usr/include/c++/7/deque \
- /usr/include/c++/7/bits/stl_deque.h /usr/include/c++/7/bits/deque.tcc \
- /usr/include/c++/7/mutex /usr/include/c++/7/bits/std_mutex.h \
- /usr/include/c++/7/condition_variable \
+ /usr/include/c++/7/bits/stl_numeric.h /usr/include/c++/7/mutex \
+ /usr/include/c++/7/bits/std_mutex.h \
  /home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.h

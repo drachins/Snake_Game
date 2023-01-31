@@ -23,12 +23,12 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   PlaceObstacle();
 }
 
-SDL_Keycode Game::waitForEventMsg(){
+SDL_Keycode Game::GetKeypress(int ind){
 
-  key = _eventMsgs.recieve();
-  return key;
+  return result.at(ind);
 
 }
+
 
 
 void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
@@ -39,35 +39,41 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   int frame_count = 0;
   bool running{true};
 
-  Controller controller1(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, _snakes.at(0));
-  Controller controller2(SDLK_w, SDLK_s, SDLK_a, SDLK_d, _snakes.at(1));
-
-  controller1.setGameHandle(this);
-  controller2.setGameHandle(this);
-
+  for(int i = 0; i < nPlayers; i++){
+    if(i == 0){
+      _controllers.push_back(std::make_unique<Controller>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, _snakes.at(i), i));
+      _controllers.at(i)->setGameHandle(this);
+    }
+    else{
+      _controllers.push_back(std::make_unique<Controller>(SDLK_w, SDLK_s, SDLK_a, SDLK_d, _snakes.at(i), i));
+      _controllers.at(i)->setGameHandle(this);      
+    }
+  }
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
-
-  controller1.launch();
-  controller2.launch();
+  std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->launch();});
   
   
-  /*for(int i = 0; i < nPlayers; i++){
-    _controllers.at(i).launch(running, _snakes.at(i));
-  }*/
-
-
   while (running) {
 
+    SDL_Keycode key_code;
     SDL_Event e;
     while(SDL_PollEvent(&e)){
       if(e.type == SDL_QUIT){
         running = false;
       }
       else if(e.type == SDL_KEYDOWN){
-        _eventMsgs.send(std::move(e.key.keysym.sym));
+        key_code = e.key.keysym.sym;
+
+        if(any_of(key_codes_controller1.begin(), key_codes_controller1.end(), [key_code](SDL_Keycode itr){return itr == key_code;}))
+          result.at(0) = key_code;
+
+        else if(any_of(key_codes_controller2.begin(), key_codes_controller2.end(), [key_code](SDL_Keycode itr){return itr == key_code;}))
+          result.at(1) = key_code;
+        
+        }
       }
-    }
+  
 
 
     frame_start = SDL_GetTicks();
@@ -102,8 +108,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
   }
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
-  controller1.control_running = false;
-  controller2.control_running = false;
+  std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->control_running = false;});
 }
 
 void Game::PlaceFood() {

@@ -25,7 +25,7 @@ void Controller::ChangeDirection(Snake::Direction input, Snake::Direction opposi
 
 void Controller::HandleInput(){
   
-      _Key = _game->waitForEventMsg();
+      _Key = _game->GetKeypress(_nPlayer);
   
       if(_Key == _Up)
         ChangeDirection(Snake::Direction::kUp, Snake::Direction::kDown);          
@@ -36,7 +36,7 @@ void Controller::HandleInput(){
       else if(_Key == _Left)
         ChangeDirection(Snake::Direction::kLeft, Snake::Direction::kRight);
 
-      else 
+      else if(_Key == _Right) 
         ChangeDirection(Snake::Direction::kRight, Snake::Direction::kLeft);
    
 }
