@@ -28,20 +28,34 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   int frame_count = 0;
   bool running = true;
 
-  std::cout << "echo0" << std::endl;
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
 
-  Controller controller;
+  for(int i = 0; i < nPlayers; i++){
+  
+    if(i == 0){
+       Controller controller(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
+      _controllers.push_back(controller);
+    }
+    else{
+      Controller controller(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
+      _controllers.push_back(controller);
+    }
+  }
+
+
 
   while (running) {
 
-    _controller_tasks.emplace_back(std::async(std::launch::deferred, &Controller::HandleInput, std::ref(controller), std::ref(running), _snakes));
-    
-    for(const std::future<void> &ftr : _controller_tasks){
-      ftr.wait();
+
+    for(int i = 0; i < nPlayers; i++){
+        _controller_tasks.emplace_back(std::async(std::launch::async, &Controller::HandleInput, _controllers.at(i), std::ref(running), std::ref(_snakes.at(i))));
     }
 
+    for(std::future<void> &ftr : _controller_tasks){
+      ftr.wait();
+    }
+    
 
     frame_start = SDL_GetTicks();
 
@@ -70,6 +84,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
+  
     
 
   }
@@ -139,15 +154,18 @@ void Game::Update() {
   for(int i = 0; i < nPlayers; i++){
     int x = static_cast<int>(_snakes.at(i)->head_x);
     int y = static_cast<int>(_snakes.at(i)->head_y);
-    if(i < 1){
-      if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-        _snakes.at(i)->alive = false;
+
+    if(nPlayers > 1){
+      if(i < 1){
+        if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+          _snakes.at(i)->alive = false;
+        }
       }
-    }
-    else{
-      if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-        _snakes.at(i)->alive = false;
-      } 
+      else{
+        if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+          _snakes.at(i)->alive = false;
+        } 
+      }
     }
     
     int t = 0;
