@@ -1,19 +1,26 @@
-#include "game.h"
-#include <iostream>
-#include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      engine(dev()),
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include "SDL.h"
+#include "game.h"
+
+Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
+    : engine(dev()),
+      nPlayers(_nPlayers),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
-  _obstacle = std::unique_ptr<Obstacle>(new Obstacle());
-  PlaceObstacle();
+  
+  for(int i = 0; i < nPlayers; i++){
+    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i));
+  }
   PlaceFood();
+  PlaceObstacle();
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
-               std::size_t target_frame_duration) {
+
+void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
@@ -21,13 +28,41 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
+
+  std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
+
+  for(int i = 0; i < nPlayers; i++){
+  
+    if(i == 0){
+       Controller controller(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
+      _controllers.push_back(controller);
+    }
+    else{
+      Controller controller(SDLK_w, SDLK_s, SDLK_a, SDLK_d);
+      _controllers.push_back(controller);
+    }
+  }
+
+
+
   while (running) {
+
+
+    for(int i = 0; i < nPlayers; i++){
+        _controller_tasks.emplace_back(std::async(std::launch::async, &Controller::HandleInput, _controllers.at(i), std::ref(running), std::ref(_snakes.at(i))));
+    }
+
+    for(std::future<void> &ftr : _controller_tasks){
+      ftr.wait();
+    }
+    
+
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+
     Update();
-    renderer.Render(snake, food, *_obstacle);
+    renderer.Render(_snakes, _food, _obstacles);
 
     frame_end = SDL_GetTicks();
 
@@ -49,57 +84,111 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
+  
+    
+
   }
+  std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
 }
 
 void Game::PlaceFood() {
-  int x, y;
-  while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
-    // Check that the location is not occupied by a snake item before placing
-    // food.
-    if (!snake.SnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
-      return;
+  if(_food.empty()){
+    for(int i = 0; i < nFood; i++){
+      int x, y;
+      SDL_Point fd;
+      while(true){
+        x = random_w(engine);
+        y = random_h(engine);
+        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+          fd.x = x;
+          fd.y = y;
+          _food.push_back(fd);
+          break;
+        }
+      }
+    }
+  }
+  else{
+    int x, y;
+    SDL_Point fd;
+    while(true){
+      x = random_w(engine);
+      y = random_h(engine);
+      if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr) {return !itr->SnakeCell(x,y);})){
+        fd.x = x;
+        fd.y = y;
+        _food.push_back(fd);
+        break;
+      }
     }
   }
 }
 
+
+
 void Game::PlaceObstacle() {
-  int x, y;
-  while(true){
-    x = random_w(engine);
-    y = random_h(engine);
-    //Check that the location is not occupied by a snake or food item before placing obstacle.
-    if(!snake.SnakeCell(x, y) && x != food.x && y != food.y){
-      _obstacle->SetObstacleCoords(x, y);
-      return;
+  for(int i = 0; i < nObstacles; i++){
+    Obstacle obstacle;
+    int x, y;
+    while(true){
+      x = random_w(engine);
+      y = random_h(engine);
+      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+        obstacle.SetObstacleCoords(x,y);
+        _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
+        break;
+      }
     }
   }
+  for(auto itr : _snakes){
+    itr->GetObstacles(_obstacles);
+    }  
 }
+
 
 void Game::Update() {
 
-  if (!snake.alive) return;
 
-  snake.Update(*_obstacle);
 
-  int new_x = static_cast<int>(snake.head_x);
-  int new_y = static_cast<int>(snake.head_y);
+  
+  for(int i = 0; i < nPlayers; i++){
+    int x = static_cast<int>(_snakes.at(i)->head_x);
+    int y = static_cast<int>(_snakes.at(i)->head_y);
 
-  // Check if snake head 
-
-  // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
-    score++;
-    PlaceFood();
-    // Grow snake and increase speed.
-    snake.GrowBody();
-    snake.speed += 0.02;
+    if(nPlayers > 1){
+      if(i < 1){
+        if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+          _snakes.at(i)->alive = false;
+        }
+      }
+      else{
+        if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+          _snakes.at(i)->alive = false;
+        } 
+      }
+    }
+    
+    int t = 0;
+    for(auto fdr : _food){
+      if(fdr.x == x && fdr.y == y){
+        _food.erase(_food.begin() + t);
+        score[i]++;
+        _snakes.at(i)->GrowBody();
+        _snakes.at(i)->speed += 0.02;
+        PlaceFood();
+        break;
+      }
+      t++;
+    }
   }
 }
 
-int Game::GetScore() const { return score; }
-int Game::GetSize() const { return snake.size; }
+
+std::vector<int> Game::GetScore() const { return score; }
+
+std::vector<int> Game::GetSize() { 
+  std::vector<int> sizes;
+  std::for_each(_snakes.begin(), _snakes.end(), [sizes](std::shared_ptr<Snake> &itr) mutable {sizes.push_back(itr->size);});
+  return sizes;
+ }
+
