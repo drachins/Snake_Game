@@ -5,8 +5,6 @@
 #include <iostream>
 
 
-
-
 void Snake::launch(){
   threads.emplace_back(&Snake::run, this);
 }

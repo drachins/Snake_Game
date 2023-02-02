@@ -16,12 +16,12 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height, int _playerN)
+  Snake(int grid_width, int grid_height, int _playerN, int _head_x, int _head_y)
       : grid_width(grid_width),
         grid_height(grid_height),
         playerN(_playerN),
-        head_x(grid_height/(_playerN + 1)),
-        head_y(grid_width/(_playerN + 1)) {}
+        head_x(_head_x),
+        head_y(_head_y) {}
 
   ~Snake();
   
@@ -46,17 +46,16 @@ class Snake {
   std::vector<SDL_Point> body;
   int playerN;
 
- private:
- 
-
+ protected:
   void UpdateHead();
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
-
   bool growing{false};
-  int grid_width;
-  int grid_height;
   std::vector<std::thread> threads;
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
+  int grid_width;
+  int grid_height;
+
+
 };
 
 #endif

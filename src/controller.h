@@ -22,7 +22,7 @@ class Controller {
   void HandleInput();
   void setGameHandle(Game *game);
 
-  bool control_running;
+  bool control_running{true};
   int _nPlayer;
 
  private:

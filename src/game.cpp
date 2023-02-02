@@ -9,16 +9,27 @@
 
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
-    : engine(dev()),
+    : _grid_width(grid_width),
+      _grid_height(grid_height),
+      engine(dev()),
       nPlayers(_nPlayers),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
   
   for(int i = 0; i < nPlayers; i++){
-    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i));
+    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i, (i+14), (i+14)));
     score.push_back(0);
     snake_sizes.push_back(0);
   }
+
+  std::vector<AI_Snake::State> column (_grid_width, AI_Snake::State::kEmpty);
+  for(size_t x = 0; x < _grid_width; x++){
+    _states.push_back(column);
+  }
+
+  std::shared_ptr<AI_Snake> _ai_snake(new AI_Snake(grid_width, grid_height, 0, 25, 25));
+  _ai_snake->setGameHandle(this);
+
   PlaceFood();
   PlaceObstacle();
 }
@@ -50,8 +61,10 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     }
   }
 
+
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->launch();});
+  _ai_snake->launch();
   
   
   while (running) {
@@ -81,7 +94,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     // Input, Update, Render - the main game loop.
 
     Update();
-    renderer.Render(_snakes, _food, _obstacles);
+    renderer.Render(_snakes, _ai_snake, _food, _obstacles);
 
     frame_end = SDL_GetTicks();
 
@@ -109,6 +122,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   }
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->control_running = false;});
+  _ai_snake->alive = false;
 }
 
 void Game::PlaceFood() {
@@ -165,6 +179,43 @@ void Game::PlaceObstacle() {
     }  
 }
 
+std::vector<std::vector<AI_Snake::State>> Game::getGrid(){
+
+  for(size_t x = 0; x < _grid_width; x++){
+    for(size_t y = 0; y < _grid_height; y++){
+      if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &snk){return snk->SnakeCell(x,y);})){
+        _states.at(x).at(y) = AI_Snake::State::kObstacle;
+      }
+      else if(std::any_of(_obstacles.begin(), _obstacles.end(), [x,y](std::shared_ptr<Obstacle> &obs){return(obs->GetObstacleXCoord() == x && obs->GetObstacleYCoord() == y);})){
+        _states.at(x).at(y) = AI_Snake::State::kObstacle;
+      }
+      else if(std::any_of(_food.begin(), _food.end(), [x,y](SDL_Point fdr){return(fdr.x == x && fdr.y == y);})){
+        _states.at(x).at(y) = AI_Snake::State::kFood;
+      }
+      else{
+        _states.at(x).at(y) = AI_Snake::State::kEmpty;
+      }
+    }
+  }
+
+  return _states;
+
+}
+
+std::vector<std::vector<int>> Game::getFoodCoords(){
+
+  std::vector<std::vector<int>> food_vec;
+
+  for(auto fdr : _food){
+    food_vec.push_back(std::vector<int>{fdr.x, fdr.y});
+  }
+
+  return food_vec;
+
+}
+
+
+
 
 void Game::Update() {
 
@@ -204,6 +255,8 @@ void Game::Update() {
       t++;
     }
   }
+
+
 }
 
 

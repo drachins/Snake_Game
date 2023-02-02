@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "snake.h"
 #include "obstacle.h"
+#include "ai_snake.h"
 
 class Controller;
 
@@ -19,11 +20,17 @@ class Game {
   ~Game();
   void Run(Renderer &renderer,std::size_t target_frame_duration);
   SDL_Keycode GetKeypress(int ind);
+  std::vector<std::vector<AI_Snake::State>> getGrid();
+  std::vector<std::vector<int>> getFoodCoords();
 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;
   std::vector<std::unique_ptr<Controller>> _controllers;
-  
+  std::vector<std::vector<AI_Snake::State>> _states;
+  std::shared_ptr<AI_Snake> _ai_snake;
+
+  std::size_t _grid_width;
+  std::size_t _grid_height;
 
  private:
 
@@ -31,7 +38,6 @@ class Game {
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
   std::uniform_int_distribution<int> random_h;
-
 
   
   std::vector<SDL_Point> _food;
