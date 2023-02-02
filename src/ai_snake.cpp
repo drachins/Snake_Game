@@ -3,7 +3,7 @@
 #include <iostream>
 
 void AI_Snake::launch_ai_snake(){
-    threads.emplace_back(&AI_Snake::run_ai_snake, this);
+    _threads.emplace_back(&AI_Snake::run_ai_snake, this);
 }
 
 void AI_Snake::run_ai_snake(){
@@ -12,7 +12,7 @@ void AI_Snake::run_ai_snake(){
     goal = FindNearestFood(init.at(0), init.at(1)); 
     grid = _game->getGrid();
     while(alive){
-        while(algo_state == State::kRunning && alive){
+        while(algo_state == State::kRunning){
             algo_state = AStarSearch();
             std::cout << alive << std::endl;
         }
@@ -47,8 +47,7 @@ bool AI_Snake::CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::St
     if(on_grid_x && on_grid_y){
         return grid[x][y] == State::kEmpty;
     }
-
-    return (grid.at(y).at(x) == State::kEmpty);
+    return false;
 }
 
 void AI_Snake::AddToOpen(int x, int y, int g, int h, std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid){
@@ -160,7 +159,7 @@ void AI_Snake::setGameHandle(Game *game){
 }
 
 AI_Snake::~AI_Snake(){
-    std::for_each(threads.begin(), threads.end(), [](std::thread &thr){thr.join();});
+    std::for_each(_threads.begin(), _threads.end(), [](std::thread &thr){thr.join();});
 }
 
 
