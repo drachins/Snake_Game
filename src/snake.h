@@ -16,7 +16,7 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height, int _playerN, int _head_x, int _head_y)
+  Snake(int grid_width, int grid_height, int _playerN, float _head_x, float _head_y)
       : grid_width(grid_width),
         grid_height(grid_height),
         playerN(_playerN),

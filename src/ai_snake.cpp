@@ -1,15 +1,18 @@
 #include "ai_snake.h"
 #include "game.h"
+#include <iostream>
 
 void AI_Snake::launch_ai_snake(){
-    _threads.emplace_back(&AI_Snake::run_ai_snake, this);
+    threads.emplace_back(&AI_Snake::run_ai_snake, this);
 }
 
 void AI_Snake::run_ai_snake(){
     AI_Snake::State algo_state = State::kRunning;
     init = {static_cast<int>(head_x), static_cast<int>(head_y)};
+    goal = FindNearestFood(init.at(0), init.at(1)); 
+    grid = _game->getGrid();
     while(alive){
-        while(algo_state == State::kRunning){
+        while(algo_state == State::kRunning && alive){
             algo_state = AStarSearch();
         }
         algo_state = State::kRunning;
@@ -37,6 +40,13 @@ int AI_Snake::Hueristic(int x1, int y1, int x2, int y2){
 }
 
 bool AI_Snake::CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::State>> &grid){
+    std::cout << x << " " << y << std::endl;
+    bool on_grid_x  = (x > 0 && x < grid.size());
+    bool on_grid_y = (y > 0 && y < grid.at(0).size());
+    if(on_grid_x && on_grid_y){
+        return grid[x][y] == State::kEmpty;
+    }
+
     return (grid.at(y).at(x) == State::kEmpty);
 }
 
@@ -73,7 +83,8 @@ void AI_Snake::UpdateStateGrid(){
 void AI_Snake::SetDirectionAndCurrentCell(){
 
     CellSort(open_list);
-    if(current_cell.at(0) == open_list.back().at(0) + delta[2][0])
+    current_cell = open_list.back();
+    if(current_cell.at(0) == open_list.back().at(0) + delta[1][0])
         direction = Direction::kRight;
     else if(current_cell.at(0) == open_list.back().at(0) + delta[0][0])
         direction = Direction::kLeft;
@@ -82,7 +93,6 @@ void AI_Snake::SetDirectionAndCurrentCell(){
     else if(current_cell.at(1) == open_list.back().at(1) + delta[2][1])
         direction = Direction::kDown;
 
-    current_cell = open_list.back();
     open_list.pop_back();
     
 }
@@ -103,6 +113,7 @@ void AI_Snake::ExpandToNeighbors(const std::vector<int> &current, std::vector<in
 
 
         //Check if potential neighbor is a valid cell.
+        std::cout << x2 << " " << y2 << " " << std::endl;
         if(CheckValidCell(x2, y2, grid)){
             int g2 = g++;
             int h2 = Hueristic(x2, y2, goal[0], goal[1]);
@@ -121,14 +132,13 @@ AI_Snake::State AI_Snake::AStarSearch(){
     int g = 0;
     int h = Hueristic(x, y, goal.at(0), goal.at(1));
     AddToOpen(x, y, g, h, open_list, grid);
-    grid = _game->getGrid();
 
     // Search loop.
     while(open_list.size()){
         
         // Update grid with new data
         SetDirectionAndCurrentCell();
-        if((current_cell.at(0) == goal.at(0) && current_cell.at(1) == goal.at(1)) || grid.at(x).at(y) != State::kFood){
+        if((current_cell.at(0) == goal.at(0) && current_cell.at(1) == goal.at(1)) || grid.at(goal.at(0)).at(goal.at(1)) != State::kFood){
             return State::kGoal;
         }
         //Set direction of snake and set current cell
@@ -143,6 +153,10 @@ AI_Snake::State AI_Snake::AStarSearch(){
 
 void AI_Snake::setGameHandle(Game *game){
     _game = game;
+}
+
+AI_Snake::~AI_Snake(){
+    std::for_each(threads.begin(), threads.end(), [](std::thread &thr){thr.join();});
 }
 
 

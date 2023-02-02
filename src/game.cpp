@@ -16,8 +16,9 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
   
+  float start_points[6] = {14, 16, 14, 16, 25, 25};
   for(int i = 0; i < nPlayers; i++){
-    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i, (i+14), (i+14)));
+    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i, start_points[i], start_points[i+2]));
     score.push_back(0);
     snake_sizes.push_back(0);
   }
@@ -27,8 +28,6 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
     _states.push_back(column);
   }
 
-  std::shared_ptr<AI_Snake> _ai_snake(new AI_Snake(grid_width, grid_height, 0, 25, 25));
-  _ai_snake->setGameHandle(this);
 
   PlaceFood();
   PlaceObstacle();
@@ -61,10 +60,14 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     }
   }
 
+  float start_points[2] {25, 25};
+
+  AI_Snake _ai_snake(_grid_width, _grid_height, 0, start_points[0], start_points[1]);
+  _ai_snake.setGameHandle(this);
 
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->launch();});
-  _ai_snake->launch();
+  _ai_snake.launch_ai_snake();
   
   
   while (running) {
@@ -122,7 +125,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   }
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->control_running = false;});
-  _ai_snake->alive = false;
+  _ai_snake.alive = false;
 }
 
 void Game::PlaceFood() {
