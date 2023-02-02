@@ -91,7 +91,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       }
   
 
-
+    _ai_snake.setRunning(running);
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.

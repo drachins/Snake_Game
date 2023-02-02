@@ -14,6 +14,7 @@ void AI_Snake::run_ai_snake(){
     while(alive){
         while(algo_state == State::kRunning && alive){
             algo_state = AStarSearch();
+            std::cout << alive << std::endl;
         }
         algo_state = State::kRunning;
         init.at(0) = static_cast<int>(head_x);
@@ -146,6 +147,9 @@ AI_Snake::State AI_Snake::AStarSearch(){
         ExpandToNeighbors(current_cell, goal, open_list, grid);
         Update();
         std::this_thread::sleep_for(std::chrono::milliseconds(15));
+        if(!running){
+            break;
+        }
 
     }
     return State::kGoal;

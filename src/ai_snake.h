@@ -16,6 +16,9 @@ class AI_Snake : public Snake {
         void launch_ai_snake();
         void setGameHandle(Game *game);
         ~AI_Snake();
+        void setRunning(bool _running){running = _running;}
+        bool running{true};
+
       
 
     private:
