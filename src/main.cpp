@@ -12,9 +12,9 @@ int main() {
   constexpr std::size_t kGridWidth{32};
   constexpr std::size_t kGridHeight{32};
 
-  int nPlayers;
+  int nPlayers = 1;
   std::cout << "Enter 1 for 1 player mode, or 2 for 2 player mode" << std::endl;
-  std::cin >> nPlayers;
+  //std::cin >> nPlayers;
   while(true){
     if(nPlayers != 1 && nPlayers != 2){
       std::cout << "Enter a valid number" << std::endl;

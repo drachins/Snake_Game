@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_definitions(-std=c++17)
 
-set(CXX_FLAGS "-Wall")
+set(CXX_FLAGS "-Wall -g")
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)

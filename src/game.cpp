@@ -98,6 +98,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     Update();
     renderer.Render(_snakes, _ai_snake, _food, _obstacles);
+    //std::for_each(_food.begin(), _food.end(), [](SDL_Point t){std::cout <<"Food coords " << t.x << " " <<t.y << std::endl;});
 
     frame_end = SDL_GetTicks();
 
@@ -218,7 +219,7 @@ std::vector<std::vector<int>> Game::getFoodCoords(){
 }
 
 
-
+std::vector<std::vector<AI_Snake::State>> grid;
 
 void Game::Update() {
 
@@ -258,6 +259,26 @@ void Game::Update() {
       t++;
     }
   }
+  /*grid = getGrid();
+  for(size_t x = 0; x < grid.size(); x++){
+            for(size_t y = 0; y < grid.size(); y++){
+                switch(grid.at(x).at(y)){
+                    case AI_Snake::State::kEmpty:
+                        std::cout << 0 << " ";
+                    break;
+                    case AI_Snake::State::kObstacle:
+                        std::cout << 1 << " ";
+                    break;
+                    case AI_Snake::State::kFood:
+                        std::cout << 2 << " ";
+                    case AI_Snake::State::kClosed:
+                        std::cout << 3 << " ";
+                    break;
+
+                }
+            }
+            std::cout << std::endl;
+    }*/
 
 
 }
