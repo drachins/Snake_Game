@@ -29,8 +29,8 @@ class AI_Snake : public Snake {
         std::vector<std::vector<AI_Snake::State>> grid;
         std::vector<std::vector<int>> open_list;
         std::vector<int> init;
-        std::vector<int> goal;
-        std::vector<std::thread> _threads;
+        int goal[2];
+        std::vector<std::thread> ai_threads;
 
         Game *_game;
 
@@ -41,13 +41,11 @@ class AI_Snake : public Snake {
         int  Hueristic(int x1, int x2, int y1, int y2);
         bool CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::State>> &grid);
         void AddToOpen(int x, int y, int g, int h, std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid);
-        void ExpandToNeighbors(const std::vector<int> &current, std::vector<int> &goal, std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid);
+        void ExpandToNeighbors(int current[], int goal[], std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid);
         std::vector<int> FindNearestFood(int x, int y);
         void UpdateStateGrid();
-        void SetDirection(std::vector<int> &current_cell);
+        void SetDirection(int current_cell[], int previous_cell[]);
         AI_Snake::State AStarSearch();
-    
-
 
 
 };

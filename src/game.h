@@ -27,6 +27,7 @@ class Game {
   std::vector<std::shared_ptr<Snake>> _snakes;
   std::vector<std::unique_ptr<Controller>> _controllers;
   std::vector<std::vector<AI_Snake::State>> _states;
+  std::shared_ptr<AI_Snake> _ai_snake;
 
   std::size_t _grid_width;
   std::size_t _grid_height;

@@ -39,7 +39,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, AI_Snake const &ai_snake, std::vector<SDL_Point> const food, std::vector<std::shared_ptr<Obstacle>> const obstacles) {
+void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::shared_ptr<AI_Snake> const ai_snake, std::vector<SDL_Point> const food, std::vector<std::shared_ptr<Obstacle>> const obstacles) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -69,7 +69,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, AI_Snake
 
   // Render AI snakes body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (SDL_Point const &point : ai_snake.body) {
+  for (SDL_Point const &point : ai_snake->body) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
@@ -102,9 +102,9 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, AI_Snake
   }
 
   // Render AI Snakes head
-  block.x = static_cast<int>(ai_snake.head_x) * block.w;
-  block.y = static_cast<int>(ai_snake.head_y) * block.h;
-  if (ai_snake.alive) {
+  block.x = static_cast<int>(ai_snake->head_x) * block.w;
+  block.y = static_cast<int>(ai_snake->head_y) * block.h;
+  if (ai_snake->alive) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x99, 0xCC, 0xFF, 0xFF);
   }
   else {

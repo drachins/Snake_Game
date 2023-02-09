@@ -4,13 +4,15 @@
 #include <mutex>
 
 void AI_Snake::launch_ai_snake(){
-    _threads.emplace_back(&AI_Snake::run_ai_snake, this);
+    ai_threads.emplace_back(&AI_Snake::run_ai_snake, this);
 }
 
 void AI_Snake::run_ai_snake(){
     AI_Snake::State algo_state = State::kRunning;
     init = {static_cast<int>(head_x), static_cast<int>(head_y)};
-    goal = FindNearestFood(init.at(0), init.at(1)); 
+    std::vector<int> new_goal = FindNearestFood(init.at(0), init.at(1)); 
+    goal[0] = new_goal.at(0);
+    goal[1] = new_goal.at(1);
     grid = _game->getGrid();
     while(alive){
         while(algo_state == State::kRunning){
@@ -19,11 +21,13 @@ void AI_Snake::run_ai_snake(){
         algo_state = State::kRunning;
         init.at(0) = static_cast<int>(head_x);
         init.at(1) = static_cast<int>(head_y);   
-        goal = FindNearestFood(init.at(0), init.at(1));     
+        std::vector<int> new_goal = FindNearestFood(init.at(0), init.at(1)); 
+        goal[0] = new_goal.at(0);
+        goal[1] = new_goal.at(1);
+        grid = _game->getGrid();   
     }
     
 }
-
 
 bool Compare(const std::vector<int> vec_a, const std::vector<int> vec_b){
     int f1 = vec_a.at(2) + vec_a.at(3);
@@ -43,15 +47,17 @@ int AI_Snake::Hueristic(int x1, int y1, int x2, int y2){
 bool AI_Snake::CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::State>> &grid){
     bool on_grid_x  = (x > 0 && x < grid.size());
     bool on_grid_y = (y > 0 && y < grid.at(0).size());
+    AI_Snake::State state = grid[x][y];
+    bool state_bool = (state == State::kEmpty || state == State::kFood);
     if(on_grid_x && on_grid_y){
-        return (grid[x][y] == State::kEmpty);
+        return (state_bool);
     }
     return false;
 }
 
 void AI_Snake::AddToOpen(int x, int y, int g, int h, std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid){
     open_list.push_back(std::vector<int>{x, y, g, h});
-    grid.at(y).at(x) = State::kClosed;
+    grid.at(x).at(y) = State::kClosed;
 }
 
 std::vector<int> AI_Snake::FindNearestFood(int x, int y){
@@ -88,67 +94,60 @@ void AI_Snake::UpdateStateGrid(){
     } 
 }
 
-void AI_Snake::SetDirection(std::vector<int> &current_cell){
+void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
 
 
 
-    if(current_cell.at(0) == open_list.back().at(0) + delta[2][0]){
+    if(current_cell[0] == previous_cell[0] + delta[0][0]){
         direction = Direction::kRight;
-        std::cout << "right" << std::endl;
     }
-    else if(current_cell.at(0) == open_list.back().at(0) + delta[0][0]){
+    else if(current_cell[0] == previous_cell[0] + delta[2][0]){
         direction = Direction::kLeft;
-        std::cout << "left" << std::endl;
     }
-    else if(current_cell.at(1) == open_list.back().at(1) + delta[3][1]){
+    else if(current_cell[1] == previous_cell[1] + delta[3][1]){
         direction = Direction::kUp;
-        std::cout << "up" << std::endl;
     }
-    else if(current_cell.at(1) == open_list.back().at(1) + delta[1][1]){
+    else if(current_cell[1] == previous_cell[1] + delta[1][1]){
         direction = Direction::kDown;
-        std::cout << "down" << std::endl;
     }
 
-    std::cout << "Current cell " << current_cell.at(0) << " " << current_cell.at(1) << std::endl;
-    
-    open_list.pop_back();
     Update();
+
     
 }
 
 
-void AI_Snake::ExpandToNeighbors(const std::vector<int> &current, std::vector<int> &goal, std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid){
+void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid){
 
-    std::mutex mtx;
-    std::lock_guard<std::mutex>  lck(mtx);
+
     // Get current node's date.
-    int x = current.at(0);
-    int y = current.at(1);
-    int g = current.at(2);  
+    int x = current[0];
+    int y = current[1];
+    int g = current[2];  
 
-    std::cout << "ExpandToNeighbors" << std::endl;
+    int data[5] = {0};
+
+
 
     // Loop through current node's potential neighbors.
     for(int i = 0; i < 4; i++){
         int x2 = x + delta[i][0];
-        int y2 = x + delta[i][1];
+        int y2 = y + delta[i][1];
+        data[0] = i;
+        data[1] = x2;
+        data[2] = y2;
+
 
         //Check if potential neighbor is a valid cell.
         if(CheckValidCell(x2, y2, grid)){
-            std::cout << "goal " << goal[0] << " " << goal[1] << std::endl;
-            int g2 = g++;
+            int g2 = g + 1;
             int h2 = Hueristic(x2, y2, goal[0], goal[1]);
-            std::cout << "{ " << x2 << " " << y2 << " " << g2 << " " << h2 << " }, ";
+            data[3] = g2;
+            data[4] = h2;
             AddToOpen(x2, y2, g2, h2, open_list, grid);
+            
         }
-    //std::cout << "{ " << open_list.at(i).at(0) << " " << open_list.at(i).at(1) << " " << open_list.at(i).at(2) << " " << open_list.at(i).at(3) << " } ";
     }
-    std::cout << std::endl;
-    std::cout << open_list.size() << std::endl;
-
-    /*for(int i = 0; i < 4; i++){
-        std::cout << "{ " << open_list[i][0] << " " << open_list[i][1] << " " << open_list[i][2] << " " << open_list[i][3] << " } ";
-    }*/
 
 }
 
@@ -160,51 +159,55 @@ AI_Snake::State AI_Snake::AStarSearch(){
     int x = init[0];
     int y = init[1];
     int g = 0;
-    int h = Hueristic(x, y, goal.at(0), goal.at(1));
+    int h = Hueristic(x, y, goal[0], goal[1]);
     AddToOpen(x, y, g, h, open_list, grid);
+    AI_Snake::State ASearch_State = State::kRunning;
+    int current_cell[4] = {0};
+    for(size_t n = 0; n < init.size(); n++){
+        current_cell[n] = init.at(n);
+    }
+    int previous_cell[4] = {0};
+    int cycle = 0;
+
 
     // Search loop.
-    while(open_list.size()){
-        
-        UpdateStateGrid();
-        CellSort(open_list);
-        std::vector<int> current_cell = open_list.back();
-        grid[current_cell.at(0)][current_cell.at(1)] = State::kPath;
-        SetDirection(current_cell);
-        if((current_cell.at(0) == goal.at(0) && current_cell.at(1) == goal.at(1)) || grid.at(goal.at(0)).at(goal.at(1)) != State::kFood){
-            return State::kGoal;
-            std::cout  << "goal" << std::endl;
-        }
-
-        for(size_t x = 0; x < grid.size(); x++){
-            for(size_t y = 0; y < grid.size(); y++){
-                switch(grid.at(x).at(y)){
-                    case State::kEmpty:
-                        std::cout << 0 << " ";
-                    break;
-                    case State::kObstacle:
-                        std::cout << 1 << " ";
-                    break;
-                    case State::kFood:
-                        std::cout << 2 << " ";
-                    case State::kClosed:
-                        std::cout << 3 << " ";
-                    break;
-                    case State::kPath:
-                        std::cout << 4 << " ";
-
-                }
+    while(true){
+        if(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y)){
+            UpdateStateGrid();
+            CellSort(open_list);
+            for(size_t i = 0; i < open_list.back().size(); i++){
+                current_cell[i] = open_list.back().at(i);
             }
-            std::cout << std::endl;
+            grid[current_cell[0]][current_cell[1]] = State::kPath;
+            if(cycle > 0){
+                SetDirection(current_cell, previous_cell);
+            }
+            open_list.clear();
+            if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
+                while(!(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y))){
+                    Update();
+                }
+                ASearch_State = State::kGoal;
+                break;
+            }
+
+            ExpandToNeighbors(current_cell, goal, open_list, grid);
+            std::this_thread::sleep_for(std::chrono::milliseconds(190));
+            if(!running || !alive){
+                break;
+            }
+            for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
+                previous_cell[n] = current_cell[n];
+            }
+            cycle++;           
         }
-        ExpandToNeighbors(current_cell, goal, open_list, grid);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        if(!running){
-            break;
-        }
+        else{
+            Update();
+        }       
+
 
     }
-    return State::kGoal;
+    return ASearch_State;
 }
 
 void AI_Snake::setGameHandle(Game *game){
@@ -212,7 +215,7 @@ void AI_Snake::setGameHandle(Game *game){
 }
 
 AI_Snake::~AI_Snake(){
-    std::for_each(_threads.begin(), _threads.end(), [](std::thread &thr){thr.join();});
+    std::for_each(ai_threads.begin(), ai_threads.end(), [](std::thread &thr){thr.join();});
 }
 
 
