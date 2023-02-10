@@ -11,7 +11,7 @@ class AI_Snake : public Snake {
     using Snake::Snake;
 
     public:
-        enum class State {kEmpty, kObstacle, kFood, kPath, kGoal, kClosed, kRunning};
+        enum class State {kEmpty, kObstacle, kFood, kPath, kBody, kGoal, kClosed, kRunning};
 
         void launch_ai_snake();
         void setGameHandle(Game *game);

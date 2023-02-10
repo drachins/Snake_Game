@@ -85,6 +85,9 @@ void AI_Snake::UpdateStateGrid(){
                     case State::kObstacle:
                         grid.at(x).at(y) = State::kObstacle;
                     break;
+                    case State::kBody:
+                        grid.at(x).at(y) = State::kBody;
+                    break;
                     case State::kEmpty:
                         grid.at(x).at(y) = State::kEmpty;
                     break;
@@ -178,7 +181,10 @@ AI_Snake::State AI_Snake::AStarSearch(){
             for(size_t i = 0; i < open_list.back().size(); i++){
                 current_cell[i] = open_list.back().at(i);
             }
-            grid[current_cell[0]][current_cell[1]] = State::kPath;
+            if(body.size() > 5){
+                grid[current_cell[0]][current_cell[1]] = State::kPath;
+            }
+
             if(cycle > 0){
                 SetDirection(current_cell, previous_cell);
             }

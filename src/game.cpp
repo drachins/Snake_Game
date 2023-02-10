@@ -189,6 +189,9 @@ std::vector<std::vector<AI_Snake::State>> Game::getGrid(){
       if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &snk){return snk->SnakeCell(x,y);})){
         _states.at(x).at(y) = AI_Snake::State::kObstacle;
       }
+      else if(_ai_snake->SnakeCell(x,y)){
+        _states.at(x).at(y) = AI_Snake::State::kBody;
+      }
       else if(std::any_of(_obstacles.begin(), _obstacles.end(), [x,y](std::shared_ptr<Obstacle> &obs){return(obs->GetObstacleXCoord() == x && obs->GetObstacleYCoord() == y);})){
         _states.at(x).at(y) = AI_Snake::State::kObstacle;
       }
