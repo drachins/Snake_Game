@@ -51,6 +51,7 @@ class Game {
   int nPlayers;
   SDL_Keycode key_code;
   
+  void PlaceSnakes();
   void PlaceFood();
   void Update();
   void PlaceObstacle();

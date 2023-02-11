@@ -47,10 +47,9 @@ int AI_Snake::Hueristic(int x1, int y1, int x2, int y2){
 bool AI_Snake::CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::State>> &grid){
     bool on_grid_x  = (x >= 0 && x <= grid.size());
     bool on_grid_y = (y >= 0 && y <= grid.at(0).size());
-    AI_Snake::State state = grid[x][y];
-    bool state_bool = (state == State::kEmpty || state == State::kFood);
     if(on_grid_x && on_grid_y){
-        return (state_bool);
+        if(grid[x][y] == State::kEmpty || grid[x][y] == State::kFood)
+            return true;
     }
     return false;
 }
@@ -142,14 +141,15 @@ void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vec
 
 
         //Check if potential neighbor is a valid cell.
-        if(CheckValidCell(x2, y2, grid)){
-            int g2 = g + 1;
-            int h2 = Hueristic(x2, y2, goal[0], goal[1]);
-            data[3] = g2;
-            data[4] = h2;
-            AddToOpen(x2, y2, g2, h2, open_list, grid);
+    if(CheckValidCell(x2, y2, grid)){
+        int g2 = g + 1;
+        int h2 = Hueristic(x2, y2, goal[0], goal[1]);
+        data[3] = g2;
+        data[4] = h2;
+        AddToOpen(x2, y2, g2, h2, open_list, grid);
             
         }
+
     }
 
 }

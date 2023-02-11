@@ -16,21 +16,18 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
   
-  float start_points[6] = {14, 16, 14, 16, 25, 25};
-  for(int i = 0; i < nPlayers; i++){
-    _snakes.push_back(std::make_shared<Snake>(grid_width, grid_height, i, start_points[i], start_points[i+2]));
-    score.push_back(0);
-    snake_sizes.push_back(0);
-  }
+  
+  score.resize(nPlayers);
+  snake_sizes.resize(nPlayers);
+  std::fill(score.begin(), score.end(), 0);
+  std::fill(snake_sizes.begin(), snake_sizes.end(), 0);
 
   std::vector<AI_Snake::State> column (_grid_width, AI_Snake::State::kEmpty);
   for(size_t x = 0; x < _grid_width; x++){
     _states.push_back(column);
   }
-  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, start_points[4], start_points[5]);
-  _ai_snake->setGameHandle(this);
 
-
+  PlaceSnakes();
   PlaceFood();
   PlaceObstacle();
 }
@@ -126,6 +123,22 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->control_running = false;});
   _ai_snake->alive = false;
+}
+
+void Game::PlaceSnakes() {
+
+  for(int i = 0; i < nPlayers; i++){
+    int x = random_w(engine);
+    int y = random_h(engine);
+    _snakes.push_back(std::make_shared<Snake>(_grid_width, _grid_height, i, x, y));
+  }
+
+  int x, y;
+  x = random_w(engine);
+  y = random_h(engine);
+  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, x, y);
+  _ai_snake->setGameHandle(this);
+
 }
 
 void Game::PlaceFood() {
