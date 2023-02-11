@@ -45,8 +45,8 @@ int AI_Snake::Hueristic(int x1, int y1, int x2, int y2){
 }
 
 bool AI_Snake::CheckValidCell(int x, int y, std::vector<std::vector<AI_Snake::State>> &grid){
-    bool on_grid_x  = (x > 0 && x < grid.size());
-    bool on_grid_y = (y > 0 && y < grid.at(0).size());
+    bool on_grid_x  = (x >= 0 && x <= grid.size());
+    bool on_grid_y = (y >= 0 && y <= grid.at(0).size());
     AI_Snake::State state = grid[x][y];
     bool state_bool = (state == State::kEmpty || state == State::kFood);
     if(on_grid_x && on_grid_y){
