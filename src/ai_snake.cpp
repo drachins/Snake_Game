@@ -150,9 +150,11 @@ void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vec
 
 void AI_Snake::CallUpdate(float x, float y){
 
-    while(!((head_x - x) > 1.0 || (head_y - y) > 1.0))
-        std::cout << "echo0" << std::endl;
+    while(!(abs(head_x - x) > 1.0 || abs(head_y - y) > 1.0)){
+        std::cout << head_x << " " << head_y << std::endl;
+        std::cout << x << " " << y << std::endl;
         Update();
+    }
 
 }
 
