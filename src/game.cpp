@@ -22,8 +22,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
   std::fill(score.begin(), score.end(), 0);
   std::fill(snake_sizes.begin(), snake_sizes.end(), 0);
 
-  std::vector<AI_Snake::State> column (_grid_width, AI_Snake::State::kEmpty);
-  for(size_t x = 0; x < _grid_width; x++){
+  std::vector<AI_Snake::State> column (_grid_width+1, AI_Snake::State::kEmpty);
+  for(size_t x = 0; x < _grid_width+1; x++){
     _states.push_back(column);
   }
 
@@ -136,7 +136,7 @@ void Game::PlaceSnakes() {
   int x, y;
   x = random_w(engine);
   y = random_h(engine);
-  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, x, y);
+  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, 0, 29);
   _ai_snake->setGameHandle(this);
 
 }
@@ -197,8 +197,8 @@ void Game::PlaceObstacle() {
 
 std::vector<std::vector<AI_Snake::State>> Game::getGrid(){
 
-  for(size_t x = 0; x < _grid_width; x++){
-    for(size_t y = 0; y < _grid_height; y++){
+  for(size_t x = 0; x < _grid_width+1; x++){
+    for(size_t y = 0; y < _grid_height+1; y++){
       if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &snk){return snk->SnakeCell(x,y);})){
         _states.at(x).at(y) = AI_Snake::State::kObstacle;
       }
@@ -237,8 +237,6 @@ std::vector<std::vector<int>> Game::getFoodCoords(){
 
 void Game::Update() {
 
-
-
   
   for(int i = 0; i < nPlayers; i++){
     int x = static_cast<int>(_snakes.at(i)->head_x);
@@ -276,7 +274,9 @@ void Game::Update() {
       else if(fdr.x == ai_x && fdr.y == ai_y){
         _food.erase(_food.begin() + t);
         _ai_snake->GrowBody();
-        _ai_snake->speed += 0.02;
+        if(_ai_snake->speed < 1.0){
+          _ai_snake->speed += 0.02;
+        }
         PlaceFood();
         break;
       }
