@@ -150,12 +150,16 @@ void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vec
 
 void AI_Snake::CallUpdate(float x, float y){
 
-    while(!(abs(head_x - x) > 1.0 || abs(head_y - y) > 1.0)){
-        std::cout << head_x << " " << head_y << std::endl;
-        std::cout << x << " " << y << std::endl;
-        Update();
+    if(direction == Direction::kRight || direction == Direction::kLeft){
+        while(abs(head_x - x) < 1.0){
+            Update();
+        }
     }
-
+    else if(direction == Direction::kUp || direction == Direction::kDown){
+        while(abs(head_y - y) < 1.0){
+            Update();
+        }
+    }
 }
 
 
@@ -179,39 +183,46 @@ AI_Snake::State AI_Snake::AStarSearch(){
 
     // Search loop.
     while(true){
-        float old_head_x = head_x;
-        float old_head_y = head_y;
+        if(abs((head_x + head_y) - (old_head_x + old_head_y)) < 1.0){
+            float old_head_x = head_x;
+            float old_head_y = head_y;
 
-        UpdateStateGrid();
+            UpdateStateGrid();
 
-        CellSort(open_list);
-        for(size_t i = 0; i < open_list.back().size(); i++){
-            current_cell[i] = open_list.back().at(i);
+            CellSort(open_list);
+            for(size_t i = 0; i < open_list.back().size(); i++){
+                    current_cell[i] = open_list.back().at(i);
+                }
+            if(cycle > 0){
+                SetDirection(current_cell, previous_cell);
+            }
+            open_list.clear();
+
+            if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
+                ASearch_State = State::kGoal;
+                if(abs((head_x + head_y) - (old_head_x + old_head_y)) < 1.0)
+                    Update();
+                break;
+            }
+
+            ExpandToNeighbors(current_cell, goal, open_list, grid);
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(170));
+
+            if(!running || !alive){
+                break;
+            }
+
+            for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
+                previous_cell[n] = current_cell[n];
+            }
+
+            cycle++;   
         }
-        if(cycle > 0){
-            SetDirection(current_cell, previous_cell);
+        else{
+            Update();
         }
-        CallUpdate(old_head_x, old_head_y);
-        open_list.clear();
-
-        if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
-            ASearch_State = State::kGoal;
-            break;
-        }
-
-        ExpandToNeighbors(current_cell, goal, open_list, grid);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(170));
-
-        if(!running || !alive){
-            break;
-        }
-
-        for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
-            previous_cell[n] = current_cell[n];
-        }
-
-        cycle++;           
+        
     }
 
     return ASearch_State;
