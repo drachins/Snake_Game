@@ -23,10 +23,14 @@ void AI_Snake::run_ai_snake(){
         while(algo_state == State::kRunning){
             algo_state = AStarSearch();
         }
-
+        State new_state;
         if(_game->_newCycle == State::kOldCycle){
-        _game->WaitforNewCycle();
+            new_state = _game->WaitforNewCycle();
         }
+        if(new_state == State::kNewCycle)
+            std::cout << "kNewCycle" << std::endl;
+        else
+            std::cout << "kOldCycle" << std::endl;
         algo_state = State::kRunning;
         init.at(0) = static_cast<int>(head_x);
         init.at(1) = static_cast<int>(head_y);   
@@ -191,13 +195,7 @@ AI_Snake::State AI_Snake::AStarSearch(){
 
             open_list.clear();
 
-            if(grid.at(goal[0]).at(goal[1]) != State::kFood){
-
-                ASearch_State = State::kGoal;
-                break;
-
-            }
-            else if(current_cell[0] == goal[0] && current_cell[0] == goal[1]){
+            if(current_cell[0] == goal[0] && current_cell[0] == goal[1] || grid.at(goal[0]).at(goal[1]) != State::kFood){
 
                 ASearch_State = State::kGoal;
 
@@ -225,7 +223,7 @@ AI_Snake::State AI_Snake::AStarSearch(){
                 previous_cell[n] = current_cell[n];
             }
 
-            cycle++;   
+            cycle++;            
         }
         else{
             Update();
