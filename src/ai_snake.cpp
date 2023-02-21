@@ -1,6 +1,8 @@
 #include "ai_snake.h"
 #include "game.h"
 #include <iostream>
+#include <cmath>
+
 
 
 void AI_Snake::launch_ai_snake(){
@@ -8,15 +10,22 @@ void AI_Snake::launch_ai_snake(){
 }
 
 void AI_Snake::run_ai_snake(){
+
     AI_Snake::State algo_state = State::kRunning;
     init = {static_cast<int>(head_x), static_cast<int>(head_y)};
     std::vector<int> new_goal = FindNearestFood(init.at(0), init.at(1)); 
     goal[0] = new_goal.at(0);
     goal[1] = new_goal.at(1);
     grid = _game->getGrid();
+
     while(alive){
+
         while(algo_state == State::kRunning){
             algo_state = AStarSearch();
+        }
+
+        if(_game->_newCycle == State::kOldCycle){
+        _game->WaitforNewCycle();
         }
         algo_state = State::kRunning;
         init.at(0) = static_cast<int>(head_x);
@@ -25,6 +34,7 @@ void AI_Snake::run_ai_snake(){
         goal[0] = new_goal.at(0);
         goal[1] = new_goal.at(1);
         grid = _game->getGrid();   
+
     }
     
 }
@@ -98,8 +108,6 @@ void AI_Snake::UpdateStateGrid(){
 
 void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
 
-
-
     if(current_cell[0] == previous_cell[0] + delta[0][0]){
         direction = Direction::kRight;
     }
@@ -118,24 +126,16 @@ void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
 
 void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vector<int>> &open_list, std::vector<std::vector<AI_Snake::State>> &grid){
 
-
     // Get current node's date.
     int x = current[0];
     int y = current[1];
     int g = current[2];  
 
-    int data[5] = {0};
-
-
-
     // Loop through current node's potential neighbors.
     for(int i = 0; i < 4; i++){
         int x2 = static_cast<int>(fmod(x + delta[i][0] + grid_width, grid_width));
         int y2 = static_cast<int>(fmod(y + delta[i][1] + grid_height, grid_height));
-
         //std::cout << i << std::endl;
-
-
         //Check if potential neighbor is a valid cell.
         if(CheckValidCell(x2, y2, grid)){
             int g2 = g + 1;
@@ -148,20 +148,6 @@ void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vec
 
 }
 
-void AI_Snake::CallUpdate(float x, float y){
-
-    if(direction == Direction::kRight || direction == Direction::kLeft){
-        while(abs(head_x - x) < 1.0){
-            Update();
-        }
-    }
-    else if(direction == Direction::kUp || direction == Direction::kDown){
-        while(abs(head_y - y) < 1.0){
-            Update();
-        }
-    }
-}
-
 
 
 AI_Snake::State AI_Snake::AStarSearch(){
@@ -172,36 +158,58 @@ AI_Snake::State AI_Snake::AStarSearch(){
     int g = 0;
     int h = Hueristic(x, y, goal[0], goal[1]);
     AddToOpen(x, y, g, h, open_list, grid);
-    AI_Snake::State ASearch_State = State::kRunning;
     int current_cell[4] = {0};
     for(size_t n = 0; n < init.size(); n++){
         current_cell[n] = init.at(n);
     }
+    AI_Snake::State ASearch_State = State::kRunning;
     int previous_cell[4] = {0};
-    int cycle = 0;
+    std::vector<float> target_cmpx {head_x, head_x};
+    std::vector<float> target_cmpy {head_y, head_y};
 
+    int cycle = 0;
 
     // Search loop.
     while(true){
-        if(abs((head_x + head_y) - (old_head_x + old_head_y)) < 1.0){
-            float old_head_x = head_x;
-            float old_head_y = head_y;
+        if(fabs(target_cmpx[0] - target_cmpx[1]) <= epsilon * *std::max_element(target_cmpx.begin(), target_cmpx.end()) && fabs(target_cmpy[0] - target_cmpy[1]) <= epsilon * *std::max_element(target_cmpy.begin(), target_cmpy.end())){
 
             UpdateStateGrid();
+            head_x = std::roundf(head_x);
+            head_y = std::roundf(head_y);
+
 
             CellSort(open_list);
             for(size_t i = 0; i < open_list.back().size(); i++){
-                    current_cell[i] = open_list.back().at(i);
-                }
+                 current_cell[i] = open_list.back().at(i);
+            }
             if(cycle > 0){
                 SetDirection(current_cell, previous_cell);
             }
+
+            target_cmpx[0] = static_cast<float>(current_cell[0]);
+            target_cmpy[0] = static_cast<float>(current_cell[1]);
+
             open_list.clear();
 
-            if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
+            if(grid.at(goal[0]).at(goal[1]) != State::kFood){
+
                 ASearch_State = State::kGoal;
-                if(abs((head_x + head_y) - (old_head_x + old_head_y)) < 1.0)
+                break;
+
+            }
+            else if(current_cell[0] == goal[0] && current_cell[0] == goal[1]){
+
+                ASearch_State = State::kGoal;
+
+                while(!(fabs(target_cmpx[0] - target_cmpx[1]) <= epsilon * *std::max_element(target_cmpx.begin(), target_cmpx.end()) && fabs(target_cmpy[0] - target_cmpy[1]) <= epsilon * *std::max_element(target_cmpy.begin(), target_cmpy.end()))){
                     Update();
+                    target_cmpx[1] = head_x;
+                    target_cmpy[1] = head_y;
+                }
+
+                head_x = std::roundf(head_x);
+                head_y = std::roundf(head_y);
+
                 break;
             }
 
@@ -221,6 +229,8 @@ AI_Snake::State AI_Snake::AStarSearch(){
         }
         else{
             Update();
+            target_cmpx[1] = head_x;
+            target_cmpy[1] = head_y;
         }
         
     }

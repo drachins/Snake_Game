@@ -11,14 +11,14 @@ class AI_Snake : public Snake {
     using Snake::Snake;
 
     public:
-        enum class State {kEmpty, kObstacle, kFood, kBody, kGoal, kClosed, kRunning};
+        enum class State {kEmpty, kObstacle, kFood, kBody, kGoal, kClosed, kRunning, kNewCycle, kOldCycle};
 
         void launch_ai_snake();
         void setGameHandle(Game *game);
         ~AI_Snake();
         void setRunning(bool _running){running = _running;}
         bool running{true};
-
+        float epsilon{0.01f};
       
 
     private:
@@ -28,7 +28,7 @@ class AI_Snake : public Snake {
         std::vector<int> init;
         std::vector<std::thread> _ai_threads;
         int goal[2];
-
+        
 
         Game *_game;
 
@@ -43,7 +43,6 @@ class AI_Snake : public Snake {
         std::vector<int> FindNearestFood(int x, int y);
         void UpdateStateGrid();
         void SetDirection(int current_cell[], int previous_cell[]);
-        void CallUpdate(float x, float y);
         AI_Snake::State AStarSearch();
 
 

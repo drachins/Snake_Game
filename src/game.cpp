@@ -2,10 +2,35 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <cmath>
 #include "SDL.h"
 #include "game.h"
 #include "controller.h"
 
+
+template <typename T>
+T CycleNotify<T>::recieve(){
+
+  std::unique_lock<std::mutex> _rLock(_mtx);
+  _cond.wait(_rLock, [this] {return !_queue.empty();});
+  
+  T message = _queue.back();
+  _queue.pop_back();
+
+  return message;
+
+}
+
+template <typename T>
+void CycleNotify<T>::send(T &&msg){
+
+  std::lock_guard<std::mutex> _sLock(_mtx);
+
+  _queue.push_back(msg);
+
+  _cond.notify_one();
+
+}
 
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
@@ -88,6 +113,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   
 
     _ai_snake->setRunning(running);
+
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
@@ -136,7 +162,7 @@ void Game::PlaceSnakes() {
   int x, y;
   x = random_w(engine);
   y = random_h(engine);
-  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, 0, 29);
+  _ai_snake = std::make_shared<AI_Snake>(_grid_width, _grid_height, 0, x, y);
   _ai_snake->setGameHandle(this);
 
 }
@@ -233,14 +259,30 @@ std::vector<std::vector<int>> Game::getFoodCoords(){
 
 }
 
+AI_Snake::State Game::WaitforNewCycle(){
+
+  while(true){
+
+      AI_Snake::State cycle = _cycleMsg.recieve();
+      if(cycle == AI_Snake::State::kNewCycle){
+        return cycle;
+      }
+
+  }
+
+}
 
 
 void Game::Update() {
+
+  _newCycle = AI_Snake::State::kOldCycle;
+  _cycleMsg.send(std::move(_newCycle));
 
   
   for(int i = 0; i < nPlayers; i++){
     int x = static_cast<int>(_snakes.at(i)->head_x);
     int y = static_cast<int>(_snakes.at(i)->head_y);
+    
     int ai_x = static_cast<int>(_ai_snake->head_x);
     int ai_y = static_cast<int>(_ai_snake->head_y);
 
@@ -275,9 +317,12 @@ void Game::Update() {
         _food.erase(_food.begin() + t);
         _ai_snake->GrowBody();
         if(_ai_snake->speed < 1.0){
+          _ai_snake->epsilon += 0.02;
           _ai_snake->speed += 0.02;
         }
         PlaceFood();
+        _newCycle = AI_Snake::State::kNewCycle;
+        _cycleMsg.send(std::move(_newCycle));
         break;
       }
       t++;

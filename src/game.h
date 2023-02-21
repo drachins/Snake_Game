@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <mutex>
+#include <condition_variable>
 #include "SDL.h"
 #include "renderer.h"
 #include "snake.h"
@@ -12,6 +13,23 @@
 #include "ai_snake.h"
 
 class Controller;
+
+template <class T>
+class CycleNotify{
+
+  public:
+
+    void send(T &&msg);
+    T recieve();
+
+  private:
+
+    std::vector<AI_Snake::State> _queue;
+    std::condition_variable _cond;
+    std::mutex _mtx;
+
+
+};
 
 
 class Game {
@@ -22,11 +40,13 @@ class Game {
   SDL_Keycode GetKeypress(int ind);
   std::vector<std::vector<AI_Snake::State>> getGrid();
   std::vector<std::vector<int>> getFoodCoords();
+  AI_Snake::State WaitforNewCycle();
 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;
   std::vector<std::unique_ptr<Controller>> _controllers;
   std::vector<std::vector<AI_Snake::State>> _states;
+  AI_Snake::State _newCycle;
   std::shared_ptr<AI_Snake> _ai_snake;
 
   std::size_t _grid_width;
@@ -50,6 +70,7 @@ class Game {
   int nObstacles{3};
   int nPlayers;
   SDL_Keycode key_code;
+  CycleNotify<AI_Snake::State> _cycleMsg;
   
   void PlaceSnakes();
   void PlaceFood();
