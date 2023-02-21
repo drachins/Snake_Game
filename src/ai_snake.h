@@ -18,7 +18,6 @@ class AI_Snake : public Snake {
         ~AI_Snake();
         void setRunning(bool _running){running = _running;}
         bool running{true};
-        float epsilon{0.01f};
       
 
     private:

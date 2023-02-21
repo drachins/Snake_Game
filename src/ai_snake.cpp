@@ -162,77 +162,51 @@ AI_Snake::State AI_Snake::AStarSearch(){
     int g = 0;
     int h = Hueristic(x, y, goal[0], goal[1]);
     AddToOpen(x, y, g, h, open_list, grid);
+    AI_Snake::State ASearch_State = State::kRunning;
     int current_cell[4] = {0};
     for(size_t n = 0; n < init.size(); n++){
         current_cell[n] = init.at(n);
     }
-    AI_Snake::State ASearch_State = State::kRunning;
     int previous_cell[4] = {0};
-    std::vector<float> target_cmpx {head_x, head_x};
-    std::vector<float> target_cmpy {head_y, head_y};
-
     int cycle = 0;
+
 
     // Search loop.
     while(true){
-        if(fabs(target_cmpx[0] - target_cmpx[1]) <= epsilon * *std::max_element(target_cmpx.begin(), target_cmpx.end()) && fabs(target_cmpy[0] - target_cmpy[1]) <= epsilon * *std::max_element(target_cmpy.begin(), target_cmpy.end())){
-
+        if(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y)){
             UpdateStateGrid();
-            head_x = std::roundf(head_x);
-            head_y = std::roundf(head_y);
-
-
             CellSort(open_list);
             for(size_t i = 0; i < open_list.back().size(); i++){
-                 current_cell[i] = open_list.back().at(i);
+                current_cell[i] = open_list.back().at(i);
             }
             if(cycle > 0){
                 SetDirection(current_cell, previous_cell);
             }
-
-            target_cmpx[0] = static_cast<float>(current_cell[0]);
-            target_cmpy[0] = static_cast<float>(current_cell[1]);
-
             open_list.clear();
-
-            if(current_cell[0] == goal[0] && current_cell[0] == goal[1] || grid.at(goal[0]).at(goal[1]) != State::kFood){
-
-                ASearch_State = State::kGoal;
-
-                while(!(fabs(target_cmpx[0] - target_cmpx[1]) <= epsilon * *std::max_element(target_cmpx.begin(), target_cmpx.end()) && fabs(target_cmpy[0] - target_cmpy[1]) <= epsilon * *std::max_element(target_cmpy.begin(), target_cmpy.end()))){
+            if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
+                while(!(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y))){
                     Update();
-                    target_cmpx[1] = head_x;
-                    target_cmpy[1] = head_y;
                 }
-
-                head_x = std::roundf(head_x);
-                head_y = std::roundf(head_y);
-
+                ASearch_State = State::kGoal;
                 break;
             }
 
             ExpandToNeighbors(current_cell, goal, open_list, grid);
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(170));
-
+            std::this_thread::sleep_for(std::chrono::milliseconds(190));
             if(!running || !alive){
                 break;
             }
-
             for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
                 previous_cell[n] = current_cell[n];
             }
-
-            cycle++;            
+            cycle++;           
         }
         else{
             Update();
-            target_cmpx[1] = head_x;
-            target_cmpy[1] = head_y;
-        }
-        
-    }
+        }       
 
+
+    }
     return ASearch_State;
 }
    

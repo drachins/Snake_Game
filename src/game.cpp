@@ -38,8 +38,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       _grid_height(grid_height),
       engine(dev()),
       nPlayers(_nPlayers),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_w(0, static_cast<int>(grid_width - 3)),
+      random_h(0, static_cast<int>(grid_height - 3)) {
   
   
   score.resize(nPlayers);
@@ -175,7 +175,7 @@ void Game::PlaceFood() {
       while(true){
         x = random_w(engine);
         y = random_h(engine);
-        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);}) && _ai_snake->SnakeCell(x,y)){
           fd.x = x;
           fd.y = y;
           _food.push_back(fd);
@@ -190,7 +190,7 @@ void Game::PlaceFood() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr) {return !itr->SnakeCell(x,y);})){
+      if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr) {return !itr->SnakeCell(x,y);} && _ai_snake->SnakeCell(x,y))){
         fd.x = x;
         fd.y = y;
         _food.push_back(fd);
@@ -209,7 +209,7 @@ void Game::PlaceObstacle() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);}) && _ai_snake->SnakeCell(x,y)){
         obstacle.SetObstacleCoords(x,y);
         _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
         break;
