@@ -30,6 +30,9 @@ void AI_Snake::run_ai_snake(){
 
         else{
             State new_state;
+            if(_game->_newCycle == State::kOldCycle){
+                new_state = _game->WaitforNewCycle();
+            }
             if(new_state == State::kNewCycle)
                 std::cout << "kNewCycle" << std::endl;
             else
