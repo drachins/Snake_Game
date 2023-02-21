@@ -316,8 +316,7 @@ void Game::Update() {
       else if(fdr.x == ai_x && fdr.y == ai_y){
         _food.erase(_food.begin() + t);
         _ai_snake->GrowBody();
-        if(_ai_snake->speed < 1.0){
-          _ai_snake->epsilon += 0.02;
+        if(_ai_snake->speed < 0.3){
           _ai_snake->speed += 0.02;
         }
         PlaceFood();
