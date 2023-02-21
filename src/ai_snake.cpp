@@ -18,14 +18,14 @@ void AI_Snake::run_ai_snake(){
     goal[1] = new_goal.at(1);
     grid = _game->getGrid();
 
-    while(alive){
+    while(true){
 
         while(algo_state == State::kRunning){
             algo_state = AStarSearch();
         }
 
         if(algo_state == State::kKilled){
-            alive = (alive == true) ? false : true;
+            break;
         }
 
         else{
