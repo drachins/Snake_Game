@@ -25,18 +25,24 @@ void AI_Snake::run_ai_snake(){
         }
 
         if(algo_state == State::kKilled){
+            std::cout << "echo1" << std::endl;
             break;
         }
 
-        else{
+        else if(algo_state == State::kGoal){
+
             State new_state;
+            std::cout << "echo0" << std::endl;
+            std::cout << running << std::endl;
             if(_game->_newCycle == State::kOldCycle){
                 new_state = _game->WaitforNewCycle();
             }
+
             if(new_state == State::kNewCycle)
                 std::cout << "kNewCycle" << std::endl;
             else
                 std::cout << "kOldCycle" << std::endl;
+
             algo_state = State::kRunning;
             init.at(0) = static_cast<int>(head_x);
             init.at(1) = static_cast<int>(head_y);   
@@ -133,8 +139,8 @@ void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
         direction = Direction::kDown;
     }
 
-    std::cout << "current_cell: " << current_cell[0] << " " << current_cell[1] << std::endl;
-    std::cout << "previous_cell: " << previous_cell[0] << " " << previous_cell[1] << std::endl;
+    //std::cout << "current_cell: " << current_cell[0] << " " << current_cell[1] << std::endl;
+    //std::cout << "previous_cell: " << previous_cell[0] << " " << previous_cell[1] << std::endl;
     
     
 }
@@ -185,6 +191,13 @@ AI_Snake::State AI_Snake::AStarSearch(){
 
     // Search loop.
     while(true){
+
+        if(!running || !alive){
+            ASearch_State = State::kKilled;
+            std::cout << "killed echo" << std::endl;
+            break;
+        }
+
         if(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y)){
             UpdateStateGrid();
             CellSort(open_list);
@@ -203,10 +216,6 @@ AI_Snake::State AI_Snake::AStarSearch(){
                 break;
             }
 
-            if(!running || !alive){
-                ASearch_State = State::kKilled;
-                break;
-            }
 
             ExpandToNeighbors(current_cell, goal, open_list, grid);
             std::this_thread::sleep_for(std::chrono::milliseconds(190));

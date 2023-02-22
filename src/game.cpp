@@ -264,6 +264,7 @@ AI_Snake::State Game::WaitforNewCycle(){
   while(true){
 
       AI_Snake::State cycle = _cycleMsg.recieve();
+      std::cout << "newcycle echo" << std::endl;
       if(cycle == AI_Snake::State::kNewCycle){
         return cycle;
       }
