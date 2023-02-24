@@ -29,6 +29,8 @@ void AI_Snake::run_ai_snake(){
             break;
         }
 
+        
+
         else if(algo_state == State::kGoal){
 
             State new_state;
@@ -126,16 +128,16 @@ void AI_Snake::UpdateStateGrid(){
 
 void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
 
-    if(current_cell[0] == previous_cell[0] + delta[0][0]){
+    if(current_cell[0] == static_cast<int>(fmod(previous_cell[0] + delta[0][0] + grid_width, grid_width))){
         direction = Direction::kRight;
     }
-    else if(current_cell[0] == previous_cell[0] + delta[2][0]){
+    else if(current_cell[0] == static_cast<int>(fmod(previous_cell[0] + delta[2][0] + grid_width, grid_width))){
         direction = Direction::kLeft;
     }
-    else if(current_cell[1] == previous_cell[1] + delta[3][1]){
+    else if(current_cell[1] == static_cast<int>(fmod(previous_cell[1] + delta[3][1] + grid_height, grid_height))){
         direction = Direction::kUp;
     }
-    else if(current_cell[1] == previous_cell[1] + delta[1][1]){
+    else if(current_cell[1] == static_cast<int>(fmod(previous_cell[1] + delta[1][1] + grid_height, grid_height))){
         direction = Direction::kDown;
     }
 
@@ -199,7 +201,9 @@ AI_Snake::State AI_Snake::AStarSearch(){
         }
 
         if(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y)){
+
             UpdateStateGrid();
+
             CellSort(open_list);
             for(size_t i = 0; i < open_list.back().size(); i++){
                 current_cell[i] = open_list.back().at(i);
@@ -208,6 +212,7 @@ AI_Snake::State AI_Snake::AStarSearch(){
                 SetDirection(current_cell, previous_cell);
             }
             open_list.clear();
+
             if((current_cell[0] == goal[0] && current_cell[0] == goal[1]) || grid.at(goal[0]).at(goal[1]) != State::kFood){
                 while(!(current_cell[0] == static_cast<int>(head_x) && current_cell[1] == static_cast<int>(head_y))){
                     Update();
@@ -216,9 +221,10 @@ AI_Snake::State AI_Snake::AStarSearch(){
                 break;
             }
 
-
             ExpandToNeighbors(current_cell, goal, open_list, grid);
+
             std::this_thread::sleep_for(std::chrono::milliseconds(190));
+
             for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
                 previous_cell[n] = current_cell[n];
             }

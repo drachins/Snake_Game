@@ -312,6 +312,8 @@ void Game::Update() {
         _snakes.at(i)->speed += 0.02;
         snake_sizes.at(i) = _snakes.at(i)->size;
         PlaceFood();
+        _newCycle = AI_Snake::State::kNewCycle;
+        _cycleMsg.send(std::move(_newCycle));
         break;
       }
       else if(fdr.x == ai_x && fdr.y == ai_y){
