@@ -24,26 +24,15 @@ void AI_Snake::run_ai_snake(){
             algo_state = AStarSearch();
         }
 
-        if(algo_state == State::kKilled){
-            std::cout << "echo1" << std::endl;
+        if(algo_state == State::kKilled)
             break;
-        }
-
-        
 
         else if(algo_state == State::kGoal){
 
             State new_state;
-            std::cout << "echo0" << std::endl;
-            std::cout << running << std::endl;
             if(_game->_newCycle == State::kOldCycle){
                 new_state = _game->WaitforNewCycle();
             }
-
-            if(new_state == State::kNewCycle)
-                std::cout << "kNewCycle" << std::endl;
-            else
-                std::cout << "kOldCycle" << std::endl;
 
             algo_state = State::kRunning;
             init.at(0) = static_cast<int>(head_x);
@@ -140,10 +129,6 @@ void AI_Snake::SetDirection(int current_cell[], int previous_cell[]){
     else if(current_cell[1] == static_cast<int>(fmod(previous_cell[1] + delta[1][1] + grid_height, grid_height))){
         direction = Direction::kDown;
     }
-
-    //std::cout << "current_cell: " << current_cell[0] << " " << current_cell[1] << std::endl;
-    //std::cout << "previous_cell: " << previous_cell[0] << " " << previous_cell[1] << std::endl;
-    
     
 }
 
@@ -159,7 +144,6 @@ void AI_Snake::ExpandToNeighbors(int current[], int goal[], std::vector<std::vec
     for(int i = 0; i < 4; i++){
         int x2 = static_cast<int>(fmod(x + delta[i][0] + grid_width, grid_width));
         int y2 = static_cast<int>(fmod(y + delta[i][1] + grid_height, grid_height));
-        //std::cout << i << std::endl;
         //Check if potential neighbor is a valid cell.
         if(CheckValidCell(x2, y2, grid)){
             int g2 = g + 1;
@@ -196,7 +180,6 @@ AI_Snake::State AI_Snake::AStarSearch(){
 
         if(!running || !alive){
             ASearch_State = State::kKilled;
-            std::cout << "killed echo" << std::endl;
             break;
         }
 

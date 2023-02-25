@@ -42,8 +42,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       random_h(0, static_cast<int>(grid_height - 1)) {
   
   
-  score.resize(nPlayers);
-  snake_sizes.resize(nPlayers);
+  score.resize(nPlayers + 1);
+  snake_sizes.resize(nPlayers + 1);
   std::fill(score.begin(), score.end(), 0);
   std::fill(snake_sizes.begin(), snake_sizes.end(), 0);
 
@@ -120,7 +120,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     Update();
     renderer.Render(_snakes, _ai_snake, _food, _obstacles);
-    //std::for_each(_food.begin(), _food.end(), [](SDL_Point t){std::cout <<"Food coords " << t.x << " " <<t.y << std::endl;});
 
     frame_end = SDL_GetTicks();
 
@@ -175,7 +174,7 @@ void Game::PlaceFood() {
       while(true){
         x = random_w(engine);
         y = random_h(engine);
-        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+        if(std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);}) && !_ai_snake->SnakeCell(x,y)){
           fd.x = x;
           fd.y = y;
           _food.push_back(fd);
@@ -190,7 +189,7 @@ void Game::PlaceFood() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr) {return !itr->SnakeCell(x,y);})){
+      if(std::any_of(_obstacles.begin(), _obstacles.end(), [x, y](std::shared_ptr<Obstacle> &itr){return !(itr->GetObstacleXCoord() == x && itr->GetObstacleYCoord() == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr) {return !itr->SnakeCell(x,y);}) && !_ai_snake->SnakeCell(x,y)){
         fd.x = x;
         fd.y = y;
         _food.push_back(fd);
@@ -209,7 +208,7 @@ void Game::PlaceObstacle() {
     while(true){
       x = random_w(engine);
       y = random_h(engine);
-      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);})){
+      if(std::any_of(_food.cbegin(), _food.cend(), [x,y](SDL_Point itr){return !(itr.x == x && itr.y == y);}) && std::any_of(_snakes.begin(), _snakes.end(), [x,y](std::shared_ptr<Snake> &itr){return !itr->SnakeCell(x,y);}) && !_ai_snake->SnakeCell(x,y)){
         obstacle.SetObstacleCoords(x,y);
         _obstacles.push_back(std::make_shared<Obstacle>(obstacle));
         break;
@@ -264,11 +263,38 @@ AI_Snake::State Game::WaitforNewCycle(){
   while(true){
 
       AI_Snake::State cycle = _cycleMsg.recieve();
-      std::cout << "newcycle echo" << std::endl;
       if(cycle == AI_Snake::State::kNewCycle){
         return cycle;
       }
 
+  }
+
+}
+
+void Game::CheckForCollision(int i, int x, int y, int ai_x, int ai_y){
+
+  if(std::any_of(_ai_snake->body.begin(), _ai_snake->body.end(), [x, y](SDL_Point itr){return(itr.x == x && itr.y == y);})){
+      _snakes.at(i)->alive = false;
+      _ai_snake->alive = false;
+  }
+  else if(std::any_of(_snakes.at(i)->body.begin(), _snakes.at(i)->body.end(), [ai_x, ai_y](SDL_Point itr){return(itr.x == ai_x && itr.y == ai_y);})){
+    _snakes.at(i)->alive = false;
+    _ai_snake->alive = false;
+  }
+
+  if(nPlayers > 1){
+    if(i < 1){
+      if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
+        _snakes.at(i)->alive = false;
+        _snakes.at(i+1)->alive = false;
+      }
+    }
+    else{
+      if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})) {
+        _snakes.at(i)->alive = false;
+        _snakes.at(i-1)->alive = false;
+      } 
+    }
   }
 
 }
@@ -288,29 +314,16 @@ void Game::Update() {
     int ai_y = static_cast<int>(_ai_snake->head_y);
 
 
-    if(nPlayers > 1){
-      if(i < 1){
-        if(std::any_of(_snakes.at(i+1)->body.begin(), _snakes.at(i+1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-          _snakes.at(i)->alive = false;
-          _snakes.at(i+1)->alive = false;
-        }
-      }
-      else{
-        if(std::any_of(_snakes.at(i-1)->body.begin(), _snakes.at(i-1)->body.end(),[x, y](SDL_Point itr){return (itr.x == x && itr.y == y);})){
-          _snakes.at(i)->alive = false;
-          _snakes.at(i-1)->alive = false;
-        } 
-      }
-    }
+    CheckForCollision(i, x, y, ai_x, ai_y);
     
     int t = 0;
     for(auto fdr : _food){
       if(fdr.x == x && fdr.y == y){
         _food.erase(_food.begin() + t);
-        score[i]++;
+        score[i+1]++;
         _snakes.at(i)->GrowBody();
         _snakes.at(i)->speed += 0.02;
-        snake_sizes.at(i) = _snakes.at(i)->size;
+        snake_sizes.at(i+1) = _snakes.at(i)->size;
         PlaceFood();
         _newCycle = AI_Snake::State::kNewCycle;
         _cycleMsg.send(std::move(_newCycle));
@@ -318,10 +331,12 @@ void Game::Update() {
       }
       else if(fdr.x == ai_x && fdr.y == ai_y){
         _food.erase(_food.begin() + t);
+        score[0]++;
         _ai_snake->GrowBody();
         if(_ai_snake->speed < 0.3){
           _ai_snake->speed += 0.02;
         }
+        snake_sizes.at(0) = _ai_snake->size;
         PlaceFood();
         _newCycle = AI_Snake::State::kNewCycle;
         _cycleMsg.send(std::move(_newCycle));
@@ -337,13 +352,13 @@ void Game::Update() {
 Game::~Game(){
 
 
-  if(snake_sizes.size() > 1){
-  std::cout << "Score for Player 1: " << score.at(0) << "  " << "Score for Player 2: " << score.at(1) << std::endl;
-  std::cout << "Size of Snake 1: " << snake_sizes.at(0) << "  " << "Size of Snake 2: " << snake_sizes.at(1) << std::endl;
+  if(snake_sizes.size() > 2){
+    std::cout << "Score for Player 1: " << score.at(1) << " , " << "Score for Player 2: " << score.at(2) << " , " << "Score for Computer: " << score.at(0) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << " , " << "Size of Snake 2: " << snake_sizes.at(2) << " , " << "Size of AI Snake: " << snake_sizes.at(0) << std::endl;
   }
   else{
-  std::cout << "Score for Player 1: " << score.at(0) << std::endl;
-  std::cout << "Size of Snake 1: " << snake_sizes.at(0) <<  std::endl;
+    std::cout << "Score for Player 1: " << score.at(1) << " , " << "Score for Computer: " << score.at(0) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << " , " <<  "Size of AI Snake: " << snake_sizes.at(0) << std::endl;
   }
 
   std::cout << "Thank you for playing!" << std::endl;

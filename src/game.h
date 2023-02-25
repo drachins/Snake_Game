@@ -76,6 +76,7 @@ class Game {
   void PlaceFood();
   void Update();
   void PlaceObstacle();
+  void CheckForCollision(int i, int x, int y, int ai_x, int ai_y);
 };
 
 #endif
