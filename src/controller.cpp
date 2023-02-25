@@ -1,39 +1,52 @@
-#include "controller.h"
+
 #include <iostream>
-#include "SDL.h"
+#include "controller.h"
 #include "snake.h"
+#include "game.h"
 
 
-void Controller::ChangeDirection(Snake &snake, Snake::Direction input, Snake::Direction opposite) const {
-
-  if (snake.direction != opposite || snake.size == 1) snake.direction = input;
-  return;
+void Controller::launch(){
+  _threads.emplace_back(&Controller::run, this);
 }
 
-
-void Controller::HandleInput(bool &running, std::shared_ptr<Snake> snakes) const {
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-
-    if(e.type == SDL_QUIT){
-      running = false;
-    }
-
-    else if (e.type == SDL_KEYDOWN) {
-  
-      if(e.key.keysym.sym == _Up)
-        ChangeDirection(*snakes, Snake::Direction::kUp, Snake::Direction::kDown);          
-
-      else if(e.key.keysym.sym == _Down)
-        ChangeDirection(*snakes, Snake::Direction::kDown, Snake::Direction::kUp);
-
-      else if(e.key.keysym.sym == _Left)
-        ChangeDirection(*snakes, Snake::Direction::kLeft, Snake::Direction::kRight);
-
-      else if(e.key.keysym.sym == _Right)
-        ChangeDirection(*snakes, Snake::Direction::kRight, Snake::Direction::kLeft);
-    }
+void Controller::run(){
+  while(control_running){
+    HandleInput();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 }
 
+void Controller::ChangeDirection(Snake::Direction input, Snake::Direction opposite){
+
+  if (_snake->direction != opposite || _snake->size == 1) _snake->direction = input;
+  return;
+}
+
+void Controller::HandleInput(){
+  
+      _Key = _game->GetKeypress(_nPlayer);
+
+  
+      if(_Key == _Up)
+        ChangeDirection(Snake::Direction::kUp, Snake::Direction::kDown);          
+
+      else if(_Key == _Down)
+        ChangeDirection(Snake::Direction::kDown, Snake::Direction::kUp);
+
+      else if(_Key == _Left)
+        ChangeDirection(Snake::Direction::kLeft, Snake::Direction::kRight);
+
+      else if(_Key == _Right) 
+        ChangeDirection(Snake::Direction::kRight, Snake::Direction::kLeft);
+   
+}
+
+void Controller::setGameHandle(Game *game){
+  _game = game;
+}
+
+
+Controller::~Controller(){
+  std::for_each(_threads.begin(), _threads.end(), [](std::thread &thr){thr.join();});
+}
         

@@ -8,12 +8,13 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/controller.cpp" "CMakeFiles/SnakeGame.dir/src/controller.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/controller.cpp.o.d"
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/game.cpp" "CMakeFiles/SnakeGame.dir/src/game.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/game.cpp.o.d"
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/main.cpp" "CMakeFiles/SnakeGame.dir/src/main.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/main.cpp.o.d"
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/obstacle.cpp" "CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o.d"
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/renderer.cpp" "CMakeFiles/SnakeGame.dir/src/renderer.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/renderer.cpp.o.d"
-  "/home/davidrachinsky/udacity/CppND-Capstone-Snake-Game-3/Snake_Game/src/snake.cpp" "CMakeFiles/SnakeGame.dir/src/snake.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/snake.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/ai_snake.cpp" "CMakeFiles/SnakeGame.dir/src/ai_snake.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/ai_snake.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/controller.cpp" "CMakeFiles/SnakeGame.dir/src/controller.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/controller.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/game.cpp" "CMakeFiles/SnakeGame.dir/src/game.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/game.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/main.cpp" "CMakeFiles/SnakeGame.dir/src/main.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/main.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/obstacle.cpp" "CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/renderer.cpp" "CMakeFiles/SnakeGame.dir/src/renderer.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/renderer.cpp.o.d"
+  "/home/dave/Udacity/CppND-Capstone-5/Snake_Game/src/snake.cpp" "CMakeFiles/SnakeGame.dir/src/snake.cpp.o" "gcc" "CMakeFiles/SnakeGame.dir/src/snake.cpp.o.d"
   )
 
 # Targets to which this target links.

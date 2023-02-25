@@ -1,12 +1,7 @@
 #include "snake.h"
 #include "SDL.h"
-#include "controller.h"
 #include <cmath>
 #include <iostream>
-#include <algorithm>
-#include <future>
-#include <functional>
-
 
 
 void Snake::launch(){
