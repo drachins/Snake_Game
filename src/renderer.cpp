@@ -121,11 +121,11 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::sha
 
 void Renderer::UpdateWindowTitle(std::vector<int> score, int fps) {
   std::string title;
-  if(score.size() > 1){
-    title = " Snake 1 " + std::to_string(score[0]) + " Snake 2 " +std::to_string(score[1]) + " FPS: " + std::to_string(fps);
+  if(score.size() > 2){
+    title = " Snake 1: " + std::to_string(score[1]) + ", " + "  Snake 2: " + std::to_string(score[2]) + ", " + "  Comp Snake: " + std::to_string(score[0]) + ", " + "  FPS: " + std::to_string(fps);
   }
   else{
-    title = " Snake 1 " + std::to_string(score[0]) + " FPS: " + std::to_string(fps);
+    title = " Snake 1: " + std::to_string(score[1]) + ", " + "  Comp Snake: " + std::to_string(score[0]) + ", " + "  FPS: " + std::to_string(fps);
   }
   
   SDL_SetWindowTitle(sdl_window, title.c_str());

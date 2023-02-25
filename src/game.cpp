@@ -41,7 +41,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int _nPlayers)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
   
-  
+
+
   score.resize(nPlayers + 1);
   snake_sizes.resize(nPlayers + 1);
   std::fill(score.begin(), score.end(), 0);
@@ -89,8 +90,8 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->launch();});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->launch();});
   _ai_snake->launch_ai_snake();
-  
-  
+
+    
   while (running) {
 
     SDL_Keycode key_code;
@@ -353,12 +354,12 @@ Game::~Game(){
 
 
   if(snake_sizes.size() > 2){
-    std::cout << "Score for Player 1: " << score.at(1) << " , " << "Score for Player 2: " << score.at(2) << " , " << "Score for Computer: " << score.at(0) << std::endl;
-    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << " , " << "Size of Snake 2: " << snake_sizes.at(2) << " , " << "Size of AI Snake: " << snake_sizes.at(0) << std::endl;
+    std::cout << "Score for Player 1: " << score.at(1) << ", " << "Score for Player 2: " << score.at(2) << ", " << "Score for Computer: " << score.at(0) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << ", " << "Size of Snake 2: " << snake_sizes.at(2) << ", " << "Size of Comp Snake: " << snake_sizes.at(0) << std::endl;
   }
   else{
-    std::cout << "Score for Player 1: " << score.at(1) << " , " << "Score for Computer: " << score.at(0) << std::endl;
-    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << " , " <<  "Size of AI Snake: " << snake_sizes.at(0) << std::endl;
+    std::cout << "Score for Player 1: " << score.at(1) << ", " << "Score for Computer: " << score.at(0) << std::endl;
+    std::cout << "Size of Snake 1: " << snake_sizes.at(1) << ", " <<  "Size of Comp Snake: " << snake_sizes.at(0) << std::endl;
   }
 
   std::cout << "Thank you for playing!" << std::endl;
