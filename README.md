@@ -2,10 +2,11 @@
 
 This is my submission for the Capstone project for the Udacity C++ Nanodegree Program. I have taken the Snake Game starter code and I have extended it by adding features such as a 2 player mode, obstacles, and a computer controlled snake to compete with. With the added features I have encorporated C++ programmin concepts such as OOP, memory management, and multi-threaded programming. 
 
-1 Player mode
-<img src="Snake_Game_1_Player_mode.gif"/>
+![](Snake_Game_1_player_mode.gif)
 
-2 Player mode
+![](Snake_game_2_player_mode.gif)
+
+
 <img src="Snake_game_2_Player_mode.gif"/>
 
 
