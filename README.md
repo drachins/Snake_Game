@@ -6,7 +6,7 @@ This is my submission for the Capstone project for the Udacity C++ Nanodegree Pr
 <img src="Snake_Game_1_Player_mode.gif"/>
 
 2 Player mode
-<img src="Snake_Game_2_Player_mode.gif"/>
+<img src="Snake_game_2_Player_mode.gif"/>
 
 
 ## Dependencies for Running Locally
