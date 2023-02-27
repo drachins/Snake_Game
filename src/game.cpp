@@ -1,7 +1,6 @@
 
 #include <iostream>
 #include <algorithm>
-#include <functional>
 #include <cmath>
 #include "SDL.h"
 #include "game.h"
@@ -143,9 +142,8 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
   
-    
-
   }
+
   std::for_each(_snakes.begin(), _snakes.end(), [](std::shared_ptr<Snake> &itr){itr->alive = false;});
   std::for_each(_controllers.begin(), _controllers.end(), [](std::unique_ptr<Controller> &ctr){ctr->control_running = false;});
   _ai_snake->alive = false;

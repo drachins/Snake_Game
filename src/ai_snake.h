@@ -27,10 +27,8 @@ class AI_Snake : public Snake {
         std::vector<int> init;
         std::vector<std::thread> _ai_threads;
         int goal[2];
-        
-
+        State algo_state = State::kGoal;
         Game *_game;
-
         const int delta[4][2]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
         void run_ai_snake();

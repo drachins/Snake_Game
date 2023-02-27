@@ -1,7 +1,6 @@
 
 #include <iostream>
 #include "controller.h"
-#include "snake.h"
 #include "game.h"
 
 

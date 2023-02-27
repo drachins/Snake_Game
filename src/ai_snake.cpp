@@ -4,45 +4,33 @@
 #include <cmath>
 
 
-
+// Function to launch AI Snake thread by call run_ai_snake function
 void AI_Snake::launch_ai_snake(){
     _ai_threads.emplace_back(&AI_Snake::run_ai_snake, this);
 }
 
+// Function that continuosly calls AStarSearch() function until Ai snake is either killed or game is closed.
 void AI_Snake::run_ai_snake(){
 
-    AI_Snake::State algo_state = State::kRunning;
-    init = {static_cast<int>(head_x), static_cast<int>(head_y)};
-    std::vector<int> new_goal = FindNearestFood(init.at(0), init.at(1)); 
-    goal[0] = new_goal.at(0);
-    goal[1] = new_goal.at(1);
-    grid = _game->getGrid();
+    // Block of code that initilaises A* search algorithm, by finding nearest food object for goal, sets algorithm state to "running" and sets initial state to position of 
+    // snake's head, and gets initial state grid from game instance.
 
     while(true){
 
-        while(algo_state == State::kRunning){
-            algo_state = AStarSearch();
-        }
-
-        if(algo_state == State::kKilled)
-            break;
-
-        else if(algo_state == State::kGoal){
-
-            State new_state;
-            if(_game->_newCycle == State::kOldCycle){
-                new_state = _game->WaitforNewCycle();
-            }
-
+        if(algo_state == State::kGoal){
             algo_state = State::kRunning;
-            init.at(0) = static_cast<int>(head_x);
-            init.at(1) = static_cast<int>(head_y);   
+            init = {static_cast<int>(head_x), static_cast<int>(head_y)};
             std::vector<int> new_goal = FindNearestFood(init.at(0), init.at(1)); 
             goal[0] = new_goal.at(0);
             goal[1] = new_goal.at(1);
-            grid = _game->getGrid();   
- 
+            grid = _game->getGrid();
         }
+
+        if(algo_state == State::kRunning)
+            algo_state = AStarSearch();
+
+        if(algo_state == State::kKilled)
+            break;
 
     }
     
