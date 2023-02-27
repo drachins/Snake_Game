@@ -82,12 +82,14 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   }
 }
 
+// Get obstacles coordinates. 
 void Snake::GetObstacles(std::vector<std::shared_ptr<Obstacle>> obstacles){
   _obstacles = obstacles; 
 }
 
 void Snake::GrowBody() { growing = true; }
 
+// Check if snake head has collided with obstacle. 
 void Snake::CheckObstacle(SDL_Point curr_cell){
   int x = curr_cell.x;
   int y = curr_cell.y;
@@ -109,6 +111,7 @@ bool Snake::SnakeCell(int x, int y) {
   return false;
 }
 
+// Class destructor that joins Snake class threads, 
 Snake::~Snake(){
   std::for_each(threads.begin(), threads.end(), [](std::thread &t){t.join();});
 }

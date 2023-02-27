@@ -119,6 +119,7 @@ void Renderer::Render(std::vector<std::shared_ptr<Snake>> const snakes, std::sha
   
 }
 
+// Prints score of each player and AI to top of window. 
 void Renderer::UpdateWindowTitle(std::vector<int> score, int fps) {
   std::string title;
   if(score.size() > 2){

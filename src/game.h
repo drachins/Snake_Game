@@ -12,8 +12,10 @@
 #include "obstacle.h"
 #include "ai_snake.h"
 
+// Forward declaration of Controller class. 
 class Controller;
 
+// Class declaration of Messengar template. 
 template <class T>
 class CycleNotify{
 
@@ -31,17 +33,23 @@ class CycleNotify{
 
 };
 
-
+// Declaration od Game class. 
 class Game {
  public:
+  // Game class constructor/destructor. 
   Game(std::size_t grid_width, std::size_t grid_height, int nPlayers);
   ~Game();
+
   void Run(Renderer &renderer,std::size_t target_frame_duration);
+
+  // Getter function declarations. 
   SDL_Keycode GetKeypress(int ind);
   std::vector<std::vector<AI_Snake::State>> getGrid();
   std::vector<std::vector<int>> getFoodCoords();
+
   AI_Snake::State WaitforNewCycle();
 
+  // Public member variable declarations. 
   std::vector<std::shared_ptr<Obstacle>> _obstacles;
   std::vector<std::shared_ptr<Snake>> _snakes;
   std::vector<std::unique_ptr<Controller>> _controllers;
@@ -54,6 +62,7 @@ class Game {
 
  private:
 
+  // Private member variable declarations. 
   std::random_device dev;
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
@@ -72,6 +81,7 @@ class Game {
   SDL_Keycode key_code;
   CycleNotify<AI_Snake::State> _cycleMsg;
   
+  // Private member method declarations. 
   void PlaceSnakes();
   void PlaceFood();
   void Update();

@@ -12,6 +12,7 @@ int main() {
   constexpr std::size_t kGridWidth{32};
   constexpr std::size_t kGridHeight{32};
 
+  // Code that prompts player to choose between 1 or 2 player modes, code prompt will keep looping until either "1" or "2" is entered 
   int nPlayers;
   std::cout << "Enter 1 for 1 player mode, or 2 for 2 player mode" << std::endl;
   std::cin >> nPlayers;
@@ -23,8 +24,11 @@ int main() {
     else{break;}
   }
 
+  // Intialization of Game and Renderer class instances 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Game game(kGridWidth, kGridHeight, nPlayers);
+
+  // Calling of main game run method. 
   game.Run(renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
   return 0;

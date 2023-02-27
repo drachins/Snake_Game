@@ -3,6 +3,7 @@
 
 #include "SDL.h"
 
+// Class definition of Obstacle class
 class Obstacle{
 
     public:
