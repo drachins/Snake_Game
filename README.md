@@ -58,7 +58,7 @@ This is my submission for the Capstone project for the Udacity C++ Nanodegree Pr
 
 ## Class Structure
 
-There are 6 distinct class objects.
+There are 7 distinct class objects.
 - Game class object, which runs the main thread of execution, and main game loop, and spawns the other threads.
 - Renderer class object, which renders the game graphics to a window.
 - Snake class object, the object that the application user directly controls, each Snake class instance is run in it's own thread.
