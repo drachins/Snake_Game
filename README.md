@@ -101,33 +101,43 @@ When the game is exited a mesage with the final score and size of each snake is 
 10 rubric points as stipulated in the CPPND Capstone Project Rubric are addressed by this project.
 
 - The project demonstrates an understanding of C++ functions and control structures.
+
   All throughout the source code for this project control statements are used, and every class is organized into functions.
 
 - The project accepts input from a user as part of the necessary operations of the program. 
+
   The program begins with a user prompt asking the user to choose between to play option 1 or 2 player, and the modes are selected by entering a 1 or 2 respectively. The player controls a snake using the arrow keys or the WASD keys, and the program terminates with a final message printed to the terminal.
 
 - The program uses Object Oriented Programming techniques.
+
   The program has 6 separate class objects, each class holding data, and containing methods to perform tasks. 
 
 - Classes use appropriate access specifiers for class members.
+
   Each class has public member variables, and functions, with the exception of the Obstacle class, which only has a private member variable. The Game, AI_Snake, Controller, and Renderer class each have public, and private member functions and variables. The Snake class has public and protected member functions and variables, as the protected members are inherited by the AI_Snake class.
 
 - Class constructors utilize member initialization lists.
+
   Every class with the exception of the Obstacle class uses a member initialization list. 
 
 - Templates generalize functions in the project.
+
   The CycleNotify messenger class have a send and receive public functions that accept generic parameters. 
 
 - The project uses smart pointers instead of raw pointers.
+
   shared pointers and a unique pointer are used in the Game class. Shared pointers are also used in the Renderer, and Controller classes.
 
 - The project uses multithreading.
+
   Each Snake, Controller, and AI_Snake object is ran in its own thread of execution. When 1 player mode is selected 3 threads are launched from the Game class instance, when 2 player mode is selected 5 threads are launched. 
 
 - A mutex or lock is used in the project.
+
   In the receive() public function in the CycleNotify class a unique lock is used, and in the send() public function in the CycleNotify class a lock_gaurd is used, each using a mutex as input.
 
 - A condition variable is used in the project.
+
   In the recieve() public function in the CycleNotify class, a control variable is used with its inbuild wait() function to wait for a data to be received in a queue vector. 
 
 ## CC Attribution-ShareAlike 4.0 International
