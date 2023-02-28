@@ -66,7 +66,7 @@ There are 6 distinct class objects.
   and is run in its own thread
 - Controller class object, each Controller instance is paired with a Snake class instance, this class facilitates keyboard input from the user to control the Snake.    
 - Obstacle class object, a very simple class, who’s instances act as obstacles on the game map, they are initialized in the main Game instance thread.
-- CycleNotify class object, a generic messenger class that primary serves as a messenger between the Game instance thread and the AI_Snake instance thread. 
+- CycleNotify class object, a generic messenger class that primarily serves as a messenger between the Game instance thread and the AI_Snake instance thread. 
 
 ## Expected Output.
 
@@ -82,7 +82,7 @@ Expected output and gameplay for 2 player mode.
 
 ![](images/Snake_game_2_player_mode.gif)
 
-The object of the game is to avoid obstacles, and other snakes, and collect food, colliding with another snake or an obstacle is instant death, with the head of the snake turning to a red colour. Collecting a food item will make a snake grow longer and increment its speed. The controls for player 1 is the keyboard arrow keys, while the controls for player two follows the WASD control scheme. The running score for each player and the computer is displayed on top of the window. The game can be exited by pressing the close button on the top right corner of the window. 
+The object of the game is to avoid obstacles, and other snakes, and collect food, colliding with another snake or an obstacle is instant death, with the head of the snake turning to a red colour. The food items are green coloured blocks, while the obstacles are grey coloured blocks. Collecting a food item will make a snake grow longer and increment its speed. The controls for player 1 is the keyboard arrow keys, while the controls for player two follows the WASD control scheme. The player 1 snake has a blue coloured head, and the player 2 snake has a orange coloured head, while the computer controlled snake has a light blue coloured head. The running score for each player and the computer is displayed on top of the window. The game can be exited by pressing the close button on the top right corner of the window. 
 
 Example of a snakes colliding with an obstacle.
 
@@ -106,7 +106,7 @@ When the game is exited a mesage with the final score and size of each snake is 
 
 - The project accepts input from a user as part of the necessary operations of the program. 
 
-  The program begins with a user prompt asking the user to choose between to play option 1 or 2 player, and the modes are selected by entering a 1 or 2 respectively. The player controls a snake using the arrow keys or the WASD keys, and the program terminates with a final message printed to the terminal.
+  The program begins with a user prompt asking the user to choose between a 1 player option or a 2 player co-op option, and the modes are selected by entering a 1 or 2 respectively. The player controls a snake using the arrow keys or the WASD keys, and the program terminates with a final message printed to the terminal.
 
 - The program uses Object Oriented Programming techniques.
 
