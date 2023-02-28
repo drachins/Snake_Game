@@ -230,7 +230,7 @@ AI_Snake::State AI_Snake::AStarSearch(){
             // Function call of ExpandToNeighbors().
             ExpandToNeighbors(current_cell, goal, open_list, grid);
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(190));
+            std::this_thread::sleep_for(std::chrono::milliseconds(120));
 
             // Sets previous_cell to current cell. 
             for(size_t n = 0; n < sizeof(current_cell)/sizeof(int); n++){
