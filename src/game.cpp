@@ -97,7 +97,9 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   while (running) {
 
     // Block of code that polls for keyboard press events and determines which control scheme they correspond to which is either the arrow keys for player 1,
-    // or the wasd keys for player 2, and also if the exit button is pressed on the game window.
+    // or the wasd keys for player 2, and also if the exit button is pressed on the game window. I took the polling for key events code outside of the Controller 
+    // class, as it seems that only 1 thread can poll for key presses, any other threads polling wont detect a keypress, it appears to be a limitation of the
+    // SDL2 library. 
     SDL_Keycode key_code;
     SDL_Event e;
     while(SDL_PollEvent(&e)){
