@@ -138,7 +138,7 @@ When the game is exited a mesage with the final score and size of each snake is 
 
 - A condition variable is used in the project.
 
-  In the recieve() public function in the CycleNotify class, a control variable is used with its inbuild wait() function to wait for a data to be received in a queue vector. 
+  In the recieve() public function in the CycleNotify class, a control variable is used with its inbuilt wait() function to wait for a data to be received in a queue vector. 
 
 ## CC Attribution-ShareAlike 4.0 International
 
