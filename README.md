@@ -66,7 +66,7 @@ There are 6 distinct class objects.
   and is run in its own thread
 - Controller class object, each Controller instance is paired with a Snake class instance, this class facilitates keyboard input from the user to control the Snake.    
 - Obstacle class object, a very simple class, who’s instances act as obstacles on the game map, they are initialized in the main Game instance thread.
-- CycleNotify class object, a generic messenger class that primary serves as a messenger between the Game instance thread and the AI_Snake instance thread. 
+- CycleNotify class object, a generic messenger class that primarily serves as a messenger between the Game instance thread and the AI_Snake instance thread. 
 
 ## Expected Output.
 
