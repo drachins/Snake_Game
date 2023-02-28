@@ -2,15 +2,6 @@
 
 This is my submission for the Capstone project for the Udacity C++ Nanodegree Program. I have taken the Snake Game starter code and I have extended it by adding features such as a 2 player mode, obstacles, and a computer controlled snake to compete with. With the added features I have encorporated C++ programmin concepts such as OOP, memory management, and multi-threaded programming. 
 
-Player 1 mode.
-
-![](Snake_Game_1_player_mode.gif)
-
-Player 2 mode.
-
-![](Snake_game_2_player_mode.gif)
-
-
 ## Dependencies for Running Locally
 * cmake >= 3.7
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
@@ -34,29 +25,29 @@ Player 2 mode.
 4. Run it: `./SnakeGame`.
 
 ## File Structure.
-├── cmake
-│   └── FindSDL2_image.cmake
-├── CMakeLists.txt
-├── CODEOWNERS
-├── LICENSE.md
-├── README.md
-├── Snake_Game_1_player_mode.gif
-├── Snake_game_2_player_mode.gif
-├── snake_game.gif
-└── src
-    ├── ai_snake.cpp
-    ├── ai_snake.h
-    ├── controller.cpp
-    ├── controller.h
-    ├── game.cpp
-    ├── game.h
-    ├── main.cpp
-    ├── obstacle.cpp
-    ├── obstacle.h
-    ├── renderer.cpp
-    ├── renderer.h
-    ├── snake.cpp
-    └── snake.h
+    ├── cmake
+    │   └── FindSDL2_image.cmake
+    ├── CMakeLists.txt
+    ├── CODEOWNERS
+    ├── LICENSE.md
+    ├── README.md
+    ├── Snake_Game_1_player_mode.gif
+    ├── Snake_game_2_player_mode.gif
+    ├── snake_game.gif
+    └── src
+        ├── ai_snake.cpp
+        ├── ai_snake.h
+        ├── controller.cpp
+        ├── controller.h
+        ├── game.cpp
+        ├── game.h
+        ├── main.cpp
+        ├── obstacle.cpp
+        ├── obstacle.h
+        ├── renderer.cpp
+        ├── renderer.h
+        ├── snake.cpp
+        └── snake.h
 
 ## Class Structure
 
@@ -72,6 +63,41 @@ There are 6 distinct class objects.
 ## Expected Output.
 
 When executed the program will start by promping the user on terminal to enter a 1 or 2 to chosse between a 1 or 2 player mode.
+
+![](images/Snake_Game_user_prompt.png)
+
+Expected output and gameplay for 1 player mode.
+
+![](images/Snake_Game_1_player_mode.gif)
+
+Expected output and gameplay for 2 player mode.
+
+![](images/Snake_game_2_player_mode.gif)
+
+The object of the game is to avoid obstacles, and other snakes, and collect food, colliding with another snake or an obstacle is instant death, with the head of the snake turning to a red colour. Collecting a food item will make a snake grow longer and increment its speed.The controls for player 1 is the keyboard arrow keys, while the controls for player two follows the WASD control scheme. The running score for each player and the computer is displayed on top of the window. The game can be exited by pressing the close button on the top right corner of the window. 
+
+Example of a snakes colliding with an obstacle.
+
+![](images/Snake_Game_snake_obstacle.png)
+
+Example of two snakes colliding.
+
+![](images/Snake_Game_snake_collision.png)
+
+When the game is exited a mesage with the final score and size of each snake is printed to the terminal.
+
+![](images/Snake_game_final_message.png)
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## CC Attribution-ShareAlike 4.0 International
