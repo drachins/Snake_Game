@@ -33,8 +33,46 @@ Player 2 mode.
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
 
-## File and class structure.
-The file structure of this project is quite simple 
+## File Structure.
+├── cmake
+│   └── FindSDL2_image.cmake
+├── CMakeLists.txt
+├── CODEOWNERS
+├── LICENSE.md
+├── README.md
+├── Snake_Game_1_player_mode.gif
+├── Snake_game_2_player_mode.gif
+├── snake_game.gif
+└── src
+    ├── ai_snake.cpp
+    ├── ai_snake.h
+    ├── controller.cpp
+    ├── controller.h
+    ├── game.cpp
+    ├── game.h
+    ├── main.cpp
+    ├── obstacle.cpp
+    ├── obstacle.h
+    ├── renderer.cpp
+    ├── renderer.h
+    ├── snake.cpp
+    └── snake.h
+
+## Class Structure
+
+There are 6 distinct class objects.
+- Game class object, which runs the main thread of execution, and main game loop, and spawns the other threads.
+- Renderer class object, which renders the game graphics to a window.
+- Snake class object, the object that the application user directly controls, each Snake class instance is run in it's own thread.
+- AI_Snake class object, this class is a daughter of the Snake class, the AI_Snake class instance is a Snake object that is directly controlled by the computer
+  and is run in its own thread
+- Controller class object, each Controller instance is paired with a Snake class instance, this class facilitates keyboard input from the user to control the Snake.    
+- Obstacle class object, a very simple class, who’s instances act as obstacles on the game map, they are initialized in the main Game instance thread.
+
+## Expected Output.
+
+When executed the program will start by promping the user on terminal to enter a 1 or 2 to chosse between a 1 or 2 player mode.
+
 
 ## CC Attribution-ShareAlike 4.0 International
 
