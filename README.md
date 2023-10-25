@@ -1,6 +1,6 @@
 # CPPND: Capstone Snake Game
 
-This is my submission for the Capstone project for the Udacity C++ Nanodegree Program. I have taken the Snake Game starter code and I have extended it by adding features such as a 2 player mode, obstacles, and a computer controlled snake to compete with. With the added features I have encorporated C++ programmin concepts such as OOP, memory management, and multi-threaded programming. 
+This is my submission for the Capstone project for the Udacity C++ Nanodegree Program. I have taken the Snake Game starter code and I have extended it by adding features such as a 2 player mode, obstacles, and a computer controlled snake to compete with. With the added features I have encorporated C++ programming concepts such as OOP, memory management, and multi-threaded programming. 
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
